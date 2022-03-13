@@ -104,6 +104,6 @@ namespace HR.AnsConnector.Features.Users
         public string? ExternalId { get; set; }
 
         /// <inheritdoc/>
-        public override string ToString() => $"{nameof(User)} with {nameof(ExternalId)} \"{ExternalId}\"";
+        public override string ToString() => $"{nameof(User)} with {nameof(ExternalId)} '{ExternalId}'";
     }
 }
