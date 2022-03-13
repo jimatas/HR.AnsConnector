@@ -1,4 +1,4 @@
-using HR.AnsConnector.Worker.Infrastructure.Hosting;
+using HR.AnsConnector.Infrastructure.Hosting;
 
 await Host.CreateDefaultBuilder(args)
     .UseStartup<Startup>()

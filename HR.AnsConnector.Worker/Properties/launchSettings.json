@@ -1,6 +1,6 @@
 ﻿{
   "profiles": {
-    "HR.AnsConnector.Worker": {
+    "HR.AnsConnector": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "environmentVariables": {

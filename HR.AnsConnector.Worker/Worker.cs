@@ -1,7 +1,7 @@
 using HR.AnsConnector.Features.Users;
 using HR.AnsConnector.Infrastructure;
 
-namespace HR.AnsConnector.Worker
+namespace HR.AnsConnector
 {
     public class Worker : BackgroundService
     {

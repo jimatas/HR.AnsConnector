@@ -1,14 +1,6 @@
 ﻿using Developist.Core.Cqrs.Commands;
 
-using HR.AnsConnector.Features.Users;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HR.AnsConnector.Worker.Features.Users
+namespace HR.AnsConnector.Features.Users
 {
     public class CreateUser : ICommand
     {

@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-HR.AnsConnector-30FCC40F-3C2F-471F-AFDF-DF33A9DF7F27</UserSecretsId>
+    <RootNamespace>HR.AnsConnector</RootNamespace>
   </PropertyGroup>
   
   <ItemGroup>

@@ -1,6 +1,5 @@
 ﻿using HR.AnsConnector;
 using HR.AnsConnector.Infrastructure;
-using HR.AnsConnector.Worker;
 
 using Microsoft.Extensions.Options;
 

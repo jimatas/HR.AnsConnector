@@ -1,4 +1,4 @@
-﻿namespace HR.AnsConnector.Worker.Infrastructure.Hosting
+﻿namespace HR.AnsConnector.Infrastructure.Hosting
 {
     internal static class HostBuilderExtensions
     {
