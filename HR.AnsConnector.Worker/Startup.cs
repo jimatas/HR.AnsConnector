@@ -1,4 +1,6 @@
-﻿using HR.AnsConnector;
+﻿using Developist.Core.Cqrs.DependencyInjection;
+
+using HR.AnsConnector;
 using HR.AnsConnector.Infrastructure;
 
 using Microsoft.Extensions.Options;
@@ -19,11 +21,15 @@ internal class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddHostedService<Worker>();
+
+        services.AddDispatcher();
+        services.AddHandlersFromAssembly(GetType().Assembly);
+
         services.Configure<ApiSettings>(Configuration.GetSection(nameof(ApiSettings)));
         services.Configure<JsonSerializerOptions>(jsonOptions =>
         {
             jsonOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-            jsonOptions.Converters.Add(new JsonStringEnumConverter());
+            jsonOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
             jsonOptions.AllowTrailingCommas = true;
             jsonOptions.PropertyNameCaseInsensitive = true; // Web default
             jsonOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase; // Web default

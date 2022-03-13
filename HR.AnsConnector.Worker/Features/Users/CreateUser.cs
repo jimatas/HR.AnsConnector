@@ -43,9 +43,9 @@ namespace HR.AnsConnector.Features.Users
             else if (apiResponse.IsErrorStatusCode())
             {
                 logger.LogWarning("Received HTTP {StatusCode} - {StatusMessage} while creating {User} in Ans. [{ValidationErrors}]",
-                    command.User,
                     apiResponse.StatusCode,
                     apiResponse.StatusMessage,
+                    command.User,
                     apiResponse.GetValidationErrorsAsSingleMessage());
             }
         }

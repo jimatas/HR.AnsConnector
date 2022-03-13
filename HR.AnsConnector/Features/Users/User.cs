@@ -70,6 +70,12 @@ namespace HR.AnsConnector.Features.Users
         public bool? IsDeleted { get; set; }
 
         /// <summary>
+        /// If the user has been soft deleted, the timestamp of deletion.
+        /// </summary>
+        [JsonPropertyName("trashed_at")]
+        public DateTime? DeletedAt { get; set; }
+
+        /// <summary>
         /// Built-in role.
         /// </summary>
         public UserRole? Role { get; set; }
