@@ -1,23 +1,25 @@
 ﻿using Developist.Core.Cqrs.Commands;
 using Developist.Core.Cqrs.Events;
+using Developist.Core.Utilities;
 
+using HR.AnsConnector.Features.Common;
 using HR.AnsConnector.Infrastructure;
 
 namespace HR.AnsConnector.Features.Users
 {
     public class UserCreated : IEvent
     {
-        public UserCreated(ApiResponse<User> createUserResponse)
+        public UserCreated(ApiResponse<User> createUserApiResponse)
         {
-            StatusMessage = $"HTTP {createUserResponse.StatusCode} - {createUserResponse.StatusDescription}";
-            Success = createUserResponse.IsSuccessStatusCode();
+            StatusMessage = createUserApiResponse.GetStatusMessage();
+            Success = createUserApiResponse.IsSuccessStatusCode();
             if (Success)
             {
-                UserId = createUserResponse.Data!.Id;
+                UserId = createUserApiResponse.Data!.Id;
             }
             else
             {
-                ErrorMessage = createUserResponse.GetValidationErrorsAsSingleMessage();
+                ErrorMessage = createUserApiResponse.GetValidationErrorsAsSingleMessage();
             }
         }
 
@@ -41,7 +43,13 @@ namespace HR.AnsConnector.Features.Users
 
         public async Task HandleAsync(UserCreated e, CancellationToken cancellationToken)
         {
-            // await commandDispatcher.DispatchAsync(new MarkAsHandled(), cancellationToken);
+            await commandDispatcher.DispatchAsync(new MarkAsHandled
+            {
+                Id = e.UserId,
+                Success = e.Success,
+                StatusMessage = e.StatusMessage,
+                ErrorMessage = e.ErrorMessage,
+            }, cancellationToken).WithoutCapturingContext();
         }
     }
 }

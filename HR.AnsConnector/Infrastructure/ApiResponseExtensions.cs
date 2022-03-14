@@ -15,5 +15,13 @@
         /// <param name="apiResponse"></param>
         /// <returns></returns>
         public static bool IsErrorStatusCode(this ApiResponse apiResponse) => apiResponse.StatusCode >= 400 && apiResponse.StatusCode <= 599;
+
+        /// <summary>
+        /// Returns a string that contains both the status code and description of the response, prepended with the string "HTTP".
+        /// For example, "HTTP 404 - Not Found".
+        /// </summary>
+        /// <param name="apiResponse"></param>
+        /// <returns></returns>
+        public static string GetStatusMessage(this ApiResponse apiResponse) => $"HTTP {apiResponse.StatusCode} - {apiResponse.StatusDescription}";
     }
 }

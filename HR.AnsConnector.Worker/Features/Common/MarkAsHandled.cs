@@ -12,7 +12,7 @@ namespace HR.AnsConnector.Features.Common
         public int? EventId { get; set; }
 
         /// <summary>
-        /// The HTTP status code and description of the API response. 
+        /// The HTTP status code and description of the response. 
         /// </summary>
         public string? StatusMessage { get; set; }
 
@@ -24,7 +24,6 @@ namespace HR.AnsConnector.Features.Common
 
     public class MarkAsHandledHandler : ICommandHandler<MarkAsHandled>
     {
-
         public Task HandleAsync(MarkAsHandled command, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
