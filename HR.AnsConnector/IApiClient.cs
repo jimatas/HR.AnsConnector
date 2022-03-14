@@ -34,7 +34,7 @@ namespace HR.AnsConnector
         Task<ApiResponse<User>> DeleteUserAsync(User user, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Search users based on the specified criteria.
+        /// Search user(s) based on some specified criteria.
         /// </summary>
         /// <param name="criteria"></param>
         /// <param name="cancellationToken"></param>

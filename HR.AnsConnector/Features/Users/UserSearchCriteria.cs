@@ -8,18 +8,18 @@ namespace HR.AnsConnector.Features.Users
     public class UserSearchCriteria
     {
         /// <summary>
-        /// Search users by external id field.
+        /// Search user(s) by external id field.
         /// </summary>
         [JsonPropertyName("external_id")]
         public string? ExternalId { get; set; }
 
         /// <summary>
-        /// Search users by email field.
+        /// Search user(s) by email field.
         /// </summary>
         public string? Email { get; set; }
 
         /// <summary>
-        /// Search users by student number field.
+        /// Search user(s) by student number field.
         /// </summary>
         [JsonPropertyName("student_number")]
         public string? StudentNumber { get; set; }
