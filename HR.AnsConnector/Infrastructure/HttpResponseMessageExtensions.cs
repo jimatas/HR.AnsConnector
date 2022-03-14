@@ -21,7 +21,7 @@ namespace HR.AnsConnector.Infrastructure
             var apiResponse = new ApiResponse<T>
             {
                 StatusCode = (int)httpResponse.StatusCode,
-                StatusMessage = httpResponse.ReasonPhrase,
+                StatusDescription = httpResponse.ReasonPhrase,
             };
 
             if (httpResponse.IsSuccessStatusCode)

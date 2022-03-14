@@ -8,8 +8,8 @@
         public int? StatusCode { get; internal set; }
 
         /// <summary>
-        /// The status message of the response.
+        /// A string describing the status code, such as "OK" or "Not Found".
         /// </summary>
-        public string? StatusMessage { get; internal set; }
+        public string? StatusDescription { get; internal set; }
     }
 }

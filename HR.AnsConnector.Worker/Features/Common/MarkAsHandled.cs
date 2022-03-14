@@ -12,9 +12,9 @@ namespace HR.AnsConnector.Features.Common
         public int? EventId { get; set; }
 
         /// <summary>
-        /// The HTTP status code and message of the API response. 
+        /// The HTTP status code and description of the API response. 
         /// </summary>
-        public string? StatusInfo { get; set; }
+        public string? StatusMessage { get; set; }
 
         /// <summary>
         /// Any validation errors that were returned by the server; flattened to a single error message.

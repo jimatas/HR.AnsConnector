@@ -38,13 +38,13 @@ namespace HR.AnsConnector.Features.Users
             {
                 logger.LogInformation("{User} was successfully created in Ans.", command.User);
 
-                await eventDispatcher.DispatchAsync(new UserCreated(apiResponse.Data!), cancellationToken).WithoutCapturingContext();
+                await eventDispatcher.DispatchAsync(new UserCreated(apiResponse), cancellationToken).WithoutCapturingContext();
             }
             else if (apiResponse.IsErrorStatusCode())
             {
                 logger.LogWarning("Received HTTP {StatusCode} - {StatusMessage} while attempting to create {User} in Ans. [{ValidationErrors}]",
                     apiResponse.StatusCode,
-                    apiResponse.StatusMessage,
+                    apiResponse.StatusDescription,
                     command.User,
                     apiResponse.GetValidationErrorsAsSingleMessage());
             }
