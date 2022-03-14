@@ -9,6 +9,6 @@
         /// <param name="apiResponse"></param>
         /// <returns></returns>
         public static string GetValidationErrorsAsSingleMessage<T>(this ApiResponse<T> apiResponse)
-            => string.Join(Environment.NewLine, apiResponse.ValidationErrors.Select(error => $"{error.Key}: {string.Join(", ", error.Value)}"));
+            => string.Join(Environment.NewLine, apiResponse.ValidationErrors.SelectMany(error => error.Value.Select(value => $"{error.Key}: {value}")));
     }
 }
