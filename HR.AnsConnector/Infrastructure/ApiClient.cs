@@ -26,7 +26,7 @@ namespace HR.AnsConnector.Infrastructure
         public async Task<ApiResponse<User>> CreateUserAsync(User user, CancellationToken cancellationToken = default)
         {
             var requestUri = $"schools/{apiSettings.TenantId}/users";
-            using var httpResponse = await httpClient.PostAsync(requestUri, JsonContent.Create(user, options: jsonOptions), cancellationToken).WithoutCapturingContext();
+            using var httpResponse = await httpClient.PostAsync(requestUri, JsonContent.Create(user, mediaType: null, jsonOptions), cancellationToken).WithoutCapturingContext();
 
             return await httpResponse.ToApiResponseAsync<User>(jsonOptions, cancellationToken).WithoutCapturingContext();
         }
@@ -35,7 +35,7 @@ namespace HR.AnsConnector.Infrastructure
         public async Task<ApiResponse<User>> UpdateUserAsync(User user, CancellationToken cancellationToken = default)
         {
             var requestUri = $"schools/{apiSettings.TenantId}/users";
-            using var httpResponse = await httpClient.PatchAsync(requestUri, JsonContent.Create(user, options: jsonOptions), cancellationToken).WithoutCapturingContext();
+            using var httpResponse = await httpClient.PatchAsync(requestUri, JsonContent.Create(user, mediaType: null, jsonOptions), cancellationToken).WithoutCapturingContext();
 
             return await httpResponse.ToApiResponseAsync<User>(jsonOptions, cancellationToken).WithoutCapturingContext();
         }

@@ -1,4 +1,7 @@
 ﻿using Developist.Core.Cqrs.Commands;
+using Developist.Core.Utilities;
+
+using HR.AnsConnector.Infrastructure.Persistence;
 
 namespace HR.AnsConnector.Features.Common
 {
@@ -16,7 +19,7 @@ namespace HR.AnsConnector.Features.Common
         public bool Success { get; }
 
         /// <summary>
-        /// The HTTP status code and description of the server response. 
+        /// The HTTP status code and description of the response. 
         /// </summary>
         public string StatusMessage { get; }
 
@@ -34,9 +37,26 @@ namespace HR.AnsConnector.Features.Common
 
     public class MarkAsHandledHandler : ICommandHandler<MarkAsHandled>
     {
-        public Task HandleAsync(MarkAsHandled command, CancellationToken cancellationToken)
+        private readonly IDatabase database;
+        private readonly ILogger logger;
+
+        public MarkAsHandledHandler(IDatabase database, ILogger<MarkAsHandledHandler> logger)
         {
-            throw new NotImplementedException();
+            this.database = database;
+            this.logger = logger;
+        }
+
+        public async Task HandleAsync(MarkAsHandled command, CancellationToken cancellationToken)
+        {
+            await database.MarkAsHandledAsync(
+                command.Success,
+                command.StatusMessage,
+                command.ErrorMessage,
+                command.Id,
+                command.EventId,
+                cancellationToken).WithoutCapturingContext();
+
+            logger.LogInformation("Marked object with Id {Id} as handled in database.", command.Id?.ToString() ?? "[n/a]");
         }
     }
 }

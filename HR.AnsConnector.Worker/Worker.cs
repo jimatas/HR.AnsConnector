@@ -1,4 +1,5 @@
 using Developist.Core.Cqrs.Commands;
+using Developist.Core.Utilities;
 
 using HR.AnsConnector.Features.Users;
 using HR.AnsConnector.Infrastructure;
@@ -38,12 +39,12 @@ namespace HR.AnsConnector
                 var getUsersResponse = await apiClient.SearchUsersAsync(new UserSearchCriteria
                 {
                     ExternalId = "atask"
-                }, stoppingToken);
+                }, stoppingToken).WithoutCapturingContext();
 
                 if (getUsersResponse.IsSuccessStatusCode() && getUsersResponse.Data!.Any())
                 {
                     var userToDelete = getUsersResponse.Data!.First();
-                    var deleteUserResponse = await apiClient.DeleteUserAsync(userToDelete, stoppingToken);
+                    var deleteUserResponse = await apiClient.DeleteUserAsync(userToDelete, stoppingToken).WithoutCapturingContext();
                 }
 
                 logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);

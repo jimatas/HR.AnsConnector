@@ -21,12 +21,14 @@ namespace HR.AnsConnector.Features.Users
             {
                 ErrorMessage = createUserResponse.GetValidationErrorsAsSingleMessage();
             }
+            // EventId = ?
         }
 
         public bool Success { get; }
         public string StatusMessage { get; }
         public string? ErrorMessage { get; }
         public int? UserId { get; }
+        public int? EventId { get; }
     }
 
     public class UserCreatedHandler : IEventHandler<UserCreated>
@@ -50,7 +52,7 @@ namespace HR.AnsConnector.Features.Users
                     e.StatusMessage,
                     e.ErrorMessage,
                     e.UserId,
-                    eventId: null),
+                    e.EventId),
                 cancellationToken).WithoutCapturingContext();
         }
     }
