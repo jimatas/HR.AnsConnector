@@ -52,7 +52,7 @@ namespace HR.AnsConnector.Infrastructure
         /// <inheritdoc/>
         public async Task<ApiResponse<IEnumerable<User>>> SearchUsersAsync(UserSearchCriteria criteria, CancellationToken cancellationToken = default)
         {
-            var requestUri = $"search/users?query={criteria.ToQueryString(jsonOptions)}";
+            var requestUri = $"search/users?query={criteria.ToQueryString(jsonOptions.PropertyNamingPolicy)}";
             using var httpResponse = await httpClient.GetAsync(requestUri, cancellationToken).WithoutCapturingContext();
 
             return await httpResponse.ToApiResponseAsync<IEnumerable<User>>(jsonOptions, cancellationToken).WithoutCapturingContext();
