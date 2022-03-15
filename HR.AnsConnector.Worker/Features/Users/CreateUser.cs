@@ -46,7 +46,7 @@ namespace HR.AnsConnector.Features.Users
                     apiResponse.GetValidationErrorsAsSingleMessage());
             }
 
-            await eventDispatcher.DispatchAsync(new UserCreated(apiResponse), cancellationToken).WithoutCapturingContext();
+            await eventDispatcher.DispatchAsync(new UserCreated(command.User, apiResponse), cancellationToken).WithoutCapturingContext();
         }
     }
 }

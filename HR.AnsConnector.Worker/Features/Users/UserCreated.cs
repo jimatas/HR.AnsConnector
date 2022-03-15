@@ -9,19 +9,19 @@ namespace HR.AnsConnector.Features.Users
 {
     public class UserCreated : IEvent
     {
-        public UserCreated(ApiResponse<User> createUserResponse)
+        public UserCreated(User user, ApiResponse<User> apiResponse)
         {
-            StatusMessage = createUserResponse.GetStatusMessage();
-            Success = createUserResponse.IsSuccessStatusCode();
+            StatusMessage = apiResponse.GetStatusMessage();
+            Success = apiResponse.IsSuccessStatusCode();
             if (Success)
             {
-                UserId = createUserResponse.Data!.Id;
+                UserId = apiResponse.Data!.Id;
             }
             else
             {
-                ErrorMessage = createUserResponse.GetValidationErrorsAsSingleMessage();
+                ErrorMessage = apiResponse.GetValidationErrorsAsSingleMessage();
             }
-            // EventId = ?
+            EventId = user.EventId;
         }
 
         public bool Success { get; }
