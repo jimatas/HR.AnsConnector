@@ -37,17 +37,16 @@ namespace HR.AnsConnector.Features.Users
             if (apiResponse.IsSuccessStatusCode())
             {
                 logger.LogInformation("{User} was successfully created in Ans.", command.User);
-
-                await eventDispatcher.DispatchAsync(new UserCreated(apiResponse), cancellationToken).WithoutCapturingContext();
             }
             else if (apiResponse.IsErrorStatusCode())
             {
-                logger.LogWarning("Received HTTP {StatusCode} - {StatusMessage} while attempting to create {User} in Ans. [{ValidationErrors}]",
-                    apiResponse.StatusCode,
-                    apiResponse.StatusDescription,
+                logger.LogWarning("Received {StatusMessage} while attempting to create {User} in Ans. [{ValidationErrors}]",
+                    apiResponse.GetStatusMessage(),
                     command.User,
                     apiResponse.GetValidationErrorsAsSingleMessage());
             }
+
+            await eventDispatcher.DispatchAsync(new UserCreated(apiResponse), cancellationToken).WithoutCapturingContext();
         }
     }
 }
