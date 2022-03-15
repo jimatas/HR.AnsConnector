@@ -1,4 +1,6 @@
-﻿namespace HR.AnsConnector.Infrastructure
+﻿using Developist.Core.Utilities;
+
+namespace HR.AnsConnector.Infrastructure
 {
     public static class ApiResponseExtensions
     {
@@ -22,7 +24,19 @@
         /// </summary>
         /// <param name="apiResponse"></param>
         /// <returns></returns>
-        public static string GetStatusMessage(this ApiResponse apiResponse) => $"HTTP {apiResponse.StatusCode} - {apiResponse.StatusDescription}";
+        public static string GetStatusMessage(this ApiResponse apiResponse)
+        {
+            var statusMessage = apiResponse.StatusCode.IsNullOrDefault() ? string.Empty : $"HTTP {apiResponse.StatusCode}";
+            if (!string.IsNullOrEmpty(apiResponse.StatusDescription))
+            {
+                if (statusMessage.Length != 0)
+                {
+                    statusMessage += " - ";
+                }
+                statusMessage += apiResponse.StatusDescription;
+            }
+            return statusMessage;
+        }
 
         /// <summary>
         /// Produces a single flattened error message given the individual validation errors, if any, that were returned in the response.
