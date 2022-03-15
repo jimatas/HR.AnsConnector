@@ -24,7 +24,7 @@ namespace HR.AnsConnector.Features.Users
         [JsonPropertyName("student_number")]
         public string? StudentNumber { get; set; }
 
-        internal string ToQueryString(JsonSerializerOptions jsonOptions)
+        internal string ToQueryString(JsonSerializerOptions? jsonOptions = null)
         {
             StringBuilder queryStringBuilder = new();
 
@@ -34,7 +34,7 @@ namespace HR.AnsConnector.Features.Users
                 if (!string.IsNullOrEmpty(propertyValue))
                 {
                     var propertyName = property.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name
-                        ?? jsonOptions.PropertyNamingPolicy?.ConvertName(property.Name)
+                        ?? jsonOptions?.PropertyNamingPolicy?.ConvertName(property.Name)
                         ?? property.Name;
 
                     if (queryStringBuilder.Length != 0)
