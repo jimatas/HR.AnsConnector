@@ -23,5 +23,14 @@
         /// <param name="apiResponse"></param>
         /// <returns></returns>
         public static string GetStatusMessage(this ApiResponse apiResponse) => $"HTTP {apiResponse.StatusCode} - {apiResponse.StatusDescription}";
+
+        /// <summary>
+        /// Produces a single flattened error message given the individual validation errors, if any, that were returned in the response.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="apiResponse"></param>
+        /// <returns></returns>
+        public static string GetValidationErrorsAsSingleMessage<T>(this ApiResponse<T> apiResponse)
+            => string.Join(Environment.NewLine, apiResponse.ValidationErrors.SelectMany(error => error.Value.Select(value => $"{error.Key}: {value}")));
     }
 }
