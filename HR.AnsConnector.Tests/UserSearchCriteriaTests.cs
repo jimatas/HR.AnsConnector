@@ -85,5 +85,54 @@ namespace HR.AnsConnector.Tests
             // Assert
             Assert.AreEqual("Email:testgebruiker%40hr.nl", result);
         }
+
+        [TestMethod]
+        public void ToQueryString_WithTwoPropertiesSet_AddsSeparator()
+        {
+            // Arrange
+            var searchCriteria = new UserSearchCriteria
+            {
+                ExternalId = "testgebruiker",
+                Email = "testgebruiker@hr.nl"
+            };
+
+            // Act
+            var result = searchCriteria.ToQueryString(JsonNamingPolicy.CamelCase);
+
+            // Assert
+            Assert.AreEqual("external_id:testgebruiker email:testgebruiker%40hr.nl", result);
+        }
+
+        [TestMethod]
+        public void ToQueryString_WithExternalIdPropertyContainingWhitespace_QuotesPropertyValue()
+        {
+            // Arrange
+            var searchCriteria = new UserSearchCriteria
+            {
+                ExternalId = "test gebruiker",
+            };
+
+            // Act
+            var result = searchCriteria.ToQueryString(JsonNamingPolicy.CamelCase);
+
+            // Assert
+            Assert.AreEqual("external_id:'test%20gebruiker'", result);
+        }
+
+        [TestMethod]
+        public void ToQueryString_WithExternalIdPropertyContainingSingleQuote_EscapesQuote()
+        {
+            // Arrange
+            var searchCriteria = new UserSearchCriteria
+            {
+                ExternalId = "test'gebruiker",
+            };
+
+            // Act
+            var result = searchCriteria.ToQueryString(JsonNamingPolicy.CamelCase);
+
+            // Assert
+            Assert.AreEqual("external_id:test%27gebruiker", result);
+        }
     }
 }
