@@ -23,18 +23,20 @@ namespace HR.AnsConnector
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                //User user = new()
-                //{
-                //    Email = "atask@hr.nl",
-                //    FirstName = "Jim",
-                //    LastName = "Atas",
-                //    Role = UserRole.Staff,
-                //    UniqueId = "atask@hro.nl",
-                //    ExternalId = "atask"
-                //};
+                UserRecord user = new()
+                {
+                    Email = "atask@hr.nl",
+                    FirstName = "Jim",
+                    LastName = "Atas",
+                    Role = UserRole.Staff,
+                    UniqueId = "atask@hro.nl",
+                    ExternalId = "atask",
+                    EventId = 1,
+                    Action = "c"
+                };
 
-                //await commandDispatcher.DispatchAsync(new CreateUser(user), stoppingToken);
-                //return;
+                await commandDispatcher.DispatchAsync(new CreateUser(user), stoppingToken);
+                return;
 
                 var getUsersResponse = await apiClient.SearchUsersAsync(new UserSearchCriteria
                 {
