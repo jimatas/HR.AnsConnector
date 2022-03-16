@@ -8,12 +8,12 @@ namespace HR.AnsConnector.Features.Users
 {
     public class DeleteUser : ICommand
     {
-        public DeleteUser(User user)
+        public DeleteUser(UserRecord user)
         {
             User = user;
         }
 
-        public User User { get; }
+        public UserRecord User { get; }
     }
 
     public class DeleteUserHandler : ICommandHandler<DeleteUser>

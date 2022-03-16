@@ -9,7 +9,7 @@ namespace HR.AnsConnector.Features.Users
 {
     public class UserDeleted : IEvent
     {
-        public UserDeleted(User user, ApiResponse<User> apiResponse)
+        public UserDeleted(UserRecord user, ApiResponse<User> apiResponse)
         {
             StatusMessage = apiResponse.GetStatusMessage();
             Success = apiResponse.IsSuccessStatusCode();

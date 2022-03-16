@@ -9,7 +9,7 @@ namespace HR.AnsConnector.Features.Users
 {
     public class UserUpdated : IEvent
     {
-        public UserUpdated(User user, ApiResponse<User> apiResponse)
+        public UserUpdated(UserRecord user, ApiResponse<User> apiResponse)
         {
             StatusMessage = apiResponse.GetStatusMessage();
             Success = apiResponse.IsSuccessStatusCode();

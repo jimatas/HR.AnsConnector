@@ -7,7 +7,7 @@ namespace HR.AnsConnector.Infrastructure.Persistence
     /// </summary>
     public interface IDatabase
     {
-        Task<User?> GetNextUserAsync(CancellationToken cancellationToken = default);
+        Task<UserRecord?> GetNextUserAsync(CancellationToken cancellationToken = default);
 
         Task MarkAsHandledAsync(
             bool success,

@@ -8,12 +8,12 @@ namespace HR.AnsConnector.Features.Users
 {
     public class CreateUser : ICommand
     {
-        public CreateUser(User user)
+        public CreateUser(UserRecord user)
         {
             User = user;
         }
 
-        public User User { get; }
+        public UserRecord User { get; }
     }
 
     public class CreateUserHandler : ICommandHandler<CreateUser>

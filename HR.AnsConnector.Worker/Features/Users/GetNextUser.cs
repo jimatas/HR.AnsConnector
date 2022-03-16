@@ -5,11 +5,11 @@ using HR.AnsConnector.Infrastructure.Persistence;
 
 namespace HR.AnsConnector.Features.Users
 {
-    public class GetNextUser : IQuery<User?>
+    public class GetNextUser : IQuery<UserRecord?>
     {
     }
 
-    public class GetNextUserHandler : IQueryHandler<GetNextUser, User?>
+    public class GetNextUserHandler : IQueryHandler<GetNextUser, UserRecord?>
     {
         private readonly IDatabase database;
         private readonly ILogger logger;
@@ -20,7 +20,7 @@ namespace HR.AnsConnector.Features.Users
             this.logger = logger;
         }
 
-        public async Task<User?> HandleAsync(GetNextUser query, CancellationToken cancellationToken)
+        public async Task<UserRecord?> HandleAsync(GetNextUser query, CancellationToken cancellationToken)
         {
             var user = await database.GetNextUserAsync(cancellationToken).WithoutCapturingContext();
             if (user is not null)

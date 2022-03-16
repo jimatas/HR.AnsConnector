@@ -109,9 +109,6 @@ namespace HR.AnsConnector.Features.Users
         [JsonPropertyName("external_id")]
         public string? ExternalId { get; set; }
 
-        [JsonIgnore]
-        public int? EventId { get; set; }
-
         /// <inheritdoc/>
         public override string ToString() => $"{nameof(User)} with {nameof(ExternalId)} '{ExternalId}'";
     }

@@ -8,12 +8,12 @@ namespace HR.AnsConnector.Features.Users
 {
     public class UpdateUser : ICommand
     {
-        public UpdateUser(User user)
+        public UpdateUser(UserRecord user)
         {
             User = user;
         }
 
-        public User User { get; }
+        public UserRecord User { get; }
     }
 
     public class UpdateUserHandler : ICommandHandler<UpdateUser>
