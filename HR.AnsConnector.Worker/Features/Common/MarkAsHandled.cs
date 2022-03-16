@@ -29,7 +29,8 @@ namespace HR.AnsConnector.Features.Common
         public string? ErrorMessage { get; }
 
         /// <summary>
-        /// The generated id of the element in Ans, if successful.
+        /// The unique id of the element in Ans.
+        /// Its value is generated upon successful creation.
         /// </summary>
         public int? Id { get; }
         public int? EventId { get; }
