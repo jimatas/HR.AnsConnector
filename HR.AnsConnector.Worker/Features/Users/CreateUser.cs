@@ -36,7 +36,14 @@ namespace HR.AnsConnector.Features.Users
             var apiResponse = await apiClient.CreateUserAsync(command.User, cancellationToken).WithoutCapturingContext();
             if (apiResponse.IsSuccessStatusCode())
             {
-                logger.LogInformation("{User} was successfully created in Ans.", command.User);
+                if (apiResponse.StatusCode == 201)
+                {
+                    logger.LogInformation("{User} was successfully created in Ans.", command.User);
+                }
+                else if (apiResponse.StatusCode == 200)
+                {
+                    logger.LogInformation("{User} already exists in Ans and was updated instead.", command.User);
+                }
             }
             else if (apiResponse.IsErrorStatusCode())
             {

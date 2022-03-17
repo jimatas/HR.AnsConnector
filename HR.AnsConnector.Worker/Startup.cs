@@ -2,6 +2,7 @@
 
 using HR.AnsConnector;
 using HR.AnsConnector.Infrastructure;
+using HR.AnsConnector.Infrastructure.Persistence;
 
 using Microsoft.Extensions.Options;
 
@@ -21,6 +22,7 @@ internal class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddHostedService<Worker>();
+        services.AddScoped<IDatabase, Database>();
 
         services.AddDispatcher();
         services.AddHandlersFromAssembly(GetType().Assembly);

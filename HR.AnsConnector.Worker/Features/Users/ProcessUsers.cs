@@ -6,7 +6,12 @@ namespace HR.AnsConnector.Features.Users
 {
     public class ProcessUsers : ICommand
     {
-        public bool IsDeleteContext { get; set; }
+        public ProcessUsers(bool isDeleteContext = false)
+        {
+            IsDeleteContext = isDeleteContext;
+        }
+
+        public bool IsDeleteContext { get; }
     }
 
     public class ProcessUsersHandler : ICommandHandler<ProcessUsers>

@@ -6,7 +6,17 @@ namespace HR.AnsConnector.Infrastructure.Persistence
     {
         public Task<UserRecord?> GetNextUserAsync(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return Task.FromResult<UserRecord?>(new()
+            {
+                Email = "atask@hr.nl",
+                FirstName = "Jim",
+                LastName = "Atas",
+                Role = UserRole.Staff,
+                UniqueId = "atask@hro.nl",
+                ExternalId = "atask",
+                EventId = 1,
+                Action = "c"
+            });
         }
 
         public Task MarkAsHandledAsync(
@@ -17,7 +27,7 @@ namespace HR.AnsConnector.Infrastructure.Persistence
             int? eventId, 
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 }

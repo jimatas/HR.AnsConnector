@@ -21,7 +21,7 @@ namespace HR.AnsConnector
             logger.LogInformation("Starting new batch run.");
 
             await commandDispatcher.DispatchAsync(new ProcessUsers(), stoppingToken).WithoutCapturingContext();
-            await commandDispatcher.DispatchAsync(new ProcessUsers { IsDeleteContext = true }, stoppingToken).WithoutCapturingContext();
+            await commandDispatcher.DispatchAsync(new ProcessUsers(isDeleteContext: true), stoppingToken).WithoutCapturingContext();
 
             logger.LogInformation("Done running batch.");
         }
