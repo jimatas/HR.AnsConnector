@@ -24,13 +24,16 @@ namespace HR.AnsConnector.Features.Users
 
         public async Task HandleAsync(ProcessUsers command, CancellationToken cancellationToken)
         {
-            int created = 0, updated = 0, deleted = 0;
+            int created = 0,
+                updated = 0,
+                deleted = 0;
+
             while (!cancellationToken.IsCancellationRequested)
             {
                 var nextUser = await queryDispatcher.DispatchAsync(new GetNextUser(), cancellationToken).WithoutCapturingContext();
                 if (nextUser is null || ((nextUser.IsToBeCreated() || nextUser.IsToBeDeleted()) && command.IsDeleteContext) || (nextUser.IsToBeDeleted() && !command.IsDeleteContext))
                 {
-                    logger.LogInformation("No more users to {Action}.", command.IsDeleteContext ? "delete" : "create or update");
+                    logger.LogInformation("No more users to {Action}. Ending batch run.", command.IsDeleteContext ? "delete" : "create or update");
                     break;
                 }
 
@@ -51,6 +54,7 @@ namespace HR.AnsConnector.Features.Users
                 }
             }
             logger.LogInformation("Processed {Processed} user(s) in total.", created + updated + deleted);
+            
             logger.LogDebug("Created {Created} user(s).", created);
             logger.LogDebug("Updated {Updated} user(s).", updated);
             logger.LogDebug("Deleted {Deleted} user(s).", deleted);
