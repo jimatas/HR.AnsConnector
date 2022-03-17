@@ -3,7 +3,7 @@
 namespace HR.AnsConnector.Infrastructure.Persistence
 {
     /// <summary>
-    /// Abstracts the source database.
+    /// Abstracts the source database and the stored procedures through which it is accessed.
     /// </summary>
     public interface IDatabase
     {
