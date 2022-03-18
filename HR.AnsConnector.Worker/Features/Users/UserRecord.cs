@@ -12,15 +12,15 @@ namespace HR.AnsConnector.Features.Users
         /// <list type="table">
         ///   <item>
         ///     <term>"c"</term>
-        ///     <description>Create a new student.</description>
+        ///     <description>Create a new entry.</description>
         ///   </item>
         ///   <item>
         ///     <term>"u"</term>
-        ///     <description>Update an existing student.</description>
+        ///     <description>Update an existing entry.</description>
         ///   </item>
         ///   <item>
         ///     <term>"d"</term>
-        ///     <description>(Soft-)delete a student.</description>
+        ///     <description>(Soft-)delete an entry.</description>
         ///   </item>
         /// </list>
         /// </summary>
