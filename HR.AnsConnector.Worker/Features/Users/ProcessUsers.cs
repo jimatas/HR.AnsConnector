@@ -36,7 +36,7 @@ namespace HR.AnsConnector.Features.Users
             while (!cancellationToken.IsCancellationRequested)
             {
                 var nextUser = await queryDispatcher.DispatchAsync(new GetNextUser(), cancellationToken).WithoutCapturingContext();
-                if (nextUser is null || ((nextUser.IsToBeCreated() || nextUser.IsToBeDeleted()) && command.IsDeleteContext) || (nextUser.IsToBeDeleted() && !command.IsDeleteContext))
+                if (nextUser is null || ((nextUser.IsToBeCreated() || nextUser.IsToBeUpdated()) && command.IsDeleteContext) || (nextUser.IsToBeDeleted() && !command.IsDeleteContext))
                 {
                     logger.LogInformation("No more users to {Action}. Ending batch run.", command.IsDeleteContext ? "delete" : "create or update");
                     break;
