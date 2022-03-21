@@ -1,7 +1,6 @@
-﻿using Developist.Core.Cqrs.Queries;
-using Developist.Core.Utilities;
-
-using HR.AnsConnector.Infrastructure.Persistence;
+﻿using HR.AnsConnector.Infrastructure.Persistence;
+using HR.Common.Cqrs.Queries;
+using HR.Common.Utilities;
 
 namespace HR.AnsConnector.Features.Users
 {

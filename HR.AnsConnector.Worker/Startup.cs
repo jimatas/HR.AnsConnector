@@ -1,8 +1,7 @@
-﻿using Developist.Core.Cqrs.DependencyInjection;
-
-using HR.AnsConnector;
+﻿using HR.AnsConnector;
 using HR.AnsConnector.Infrastructure;
 using HR.AnsConnector.Infrastructure.Persistence;
+using HR.Common.Cqrs.Infrastructure;
 
 using Microsoft.Extensions.Options;
 

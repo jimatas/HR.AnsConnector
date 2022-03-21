@@ -1,7 +1,6 @@
-using Developist.Core.Cqrs.Commands;
-using Developist.Core.Utilities;
-
 using HR.AnsConnector.Features.Users;
+using HR.Common.Cqrs.Commands;
+using HR.Common.Utilities;
 
 namespace HR.AnsConnector
 {

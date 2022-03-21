@@ -1,6 +1,5 @@
-﻿using Developist.Core.Utilities;
-
-using HR.AnsConnector.Features.Users;
+﻿using HR.AnsConnector.Features.Users;
+using HR.Common.Utilities;
 
 using Microsoft.Extensions.Options;
 

@@ -9,8 +9,8 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Developist.Core.Cqrs" Version="2.2.7" />
-    <PackageReference Include="Developist.Core.Cqrs.DependencyInjection" Version="2.2.7" />
+    <PackageReference Include="HR.Common.Cqrs" Version="1.0.0" />
+    <PackageReference Include="HR.Common.Utilities" Version="1.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
   </ItemGroup>

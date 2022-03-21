@@ -1,9 +1,8 @@
-﻿using Developist.Core.Cqrs.Commands;
-using Developist.Core.Cqrs.Events;
-using Developist.Core.Utilities;
-
-using HR.AnsConnector.Features.Common;
+﻿using HR.AnsConnector.Features.Common;
 using HR.AnsConnector.Infrastructure;
+using HR.Common.Cqrs.Commands;
+using HR.Common.Cqrs.Events;
+using HR.Common.Utilities;
 
 namespace HR.AnsConnector.Features.Users
 {

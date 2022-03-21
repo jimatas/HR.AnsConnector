@@ -1,4 +1,4 @@
-﻿using Developist.Core.Utilities;
+﻿using HR.Common.Utilities;
 
 using System.Net;
 using System.Net.Http.Json;
