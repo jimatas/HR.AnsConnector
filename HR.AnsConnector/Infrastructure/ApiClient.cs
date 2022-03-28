@@ -87,6 +87,15 @@ namespace HR.AnsConnector.Infrastructure
 
             return await httpResponse.ToApiResponseAsync<Department>(jsonOptions, cancellationToken).WithoutCapturingContext();
         }
+
+        /// <inheritdoc/>
+        public async Task<ApiResponse<IEnumerable<Department>>> ListDepartmentsAsync(CancellationToken cancellationToken = default)
+        {
+            var requestUri = $"/api/v2/schools/{apiSettings.TenantId}/departments";
+            using var httpResponse = await httpClient.GetAsync(requestUri, cancellationToken).WithoutCapturingContext();
+
+            return await httpResponse.ToApiResponseAsync<IEnumerable<Department>>(jsonOptions, cancellationToken).WithoutCapturingContext();
+        }
         #endregion
     }
 }

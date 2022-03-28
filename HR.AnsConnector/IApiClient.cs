@@ -68,6 +68,13 @@ namespace HR.AnsConnector
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task<ApiResponse<Department>> DeleteDepartmentAsync(Department department, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// List departments.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<ApiResponse<IEnumerable<Department>>> ListDepartmentsAsync(CancellationToken cancellationToken = default);
         #endregion
     }
 }
