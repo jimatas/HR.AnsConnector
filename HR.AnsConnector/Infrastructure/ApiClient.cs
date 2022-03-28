@@ -1,4 +1,5 @@
-﻿using HR.AnsConnector.Features.Users;
+﻿using HR.AnsConnector.Features.Departments;
+using HR.AnsConnector.Features.Users;
 using HR.Common.Utilities;
 
 using Microsoft.Extensions.Options;
@@ -21,6 +22,7 @@ namespace HR.AnsConnector.Infrastructure
             this.jsonOptions = jsonOptions.Value;
         }
 
+        #region Users
         /// <inheritdoc/>
         public async Task<ApiResponse<User>> CreateUserAsync(User user, CancellationToken cancellationToken = default)
         {
@@ -33,7 +35,7 @@ namespace HR.AnsConnector.Infrastructure
         /// <inheritdoc/>
         public async Task<ApiResponse<User>> UpdateUserAsync(User user, CancellationToken cancellationToken = default)
         {
-            var requestUri = $"schools/{apiSettings.TenantId}/users";
+            var requestUri = $"users/{user.Id}";
             using var httpResponse = await httpClient.PatchAsync(requestUri, JsonContent.Create(user, mediaType: null, jsonOptions), cancellationToken).WithoutCapturingContext();
 
             return await httpResponse.ToApiResponseAsync<User>(jsonOptions, cancellationToken).WithoutCapturingContext();
@@ -56,5 +58,35 @@ namespace HR.AnsConnector.Infrastructure
 
             return await httpResponse.ToApiResponseAsync<IEnumerable<User>>(jsonOptions, cancellationToken).WithoutCapturingContext();
         }
+        #endregion
+
+        #region Departments
+        /// <inheritdoc/>
+        public async Task<ApiResponse<Department>> CreateDepartmentAsync(Department department, CancellationToken cancellationToken = default)
+        {
+            var requestUri = $"schools/{apiSettings.TenantId}/departments";
+            using var httpResponse = await httpClient.PostAsync(requestUri, JsonContent.Create(department, mediaType: null, jsonOptions), cancellationToken).WithoutCapturingContext();
+
+            return await httpResponse.ToApiResponseAsync<Department>(jsonOptions, cancellationToken).WithoutCapturingContext();
+        }
+
+        /// <inheritdoc/>
+        public async Task<ApiResponse<Department>> UpdateDepartmentAsync(Department department, CancellationToken cancellationToken = default)
+        {
+            var requestUri = $"departments/{department.Id}";
+            using var httpResponse = await httpClient.PatchAsync(requestUri, JsonContent.Create(department, mediaType: null, jsonOptions), cancellationToken).WithoutCapturingContext();
+
+            return await httpResponse.ToApiResponseAsync<Department>(jsonOptions, cancellationToken).WithoutCapturingContext();
+        }
+
+        /// <inheritdoc/>
+        public async Task<ApiResponse<Department>> DeleteDepartmentAsync(Department department, CancellationToken cancellationToken = default)
+        {
+            var requestUri = $"departments/{department.Id}";
+            using var httpResponse = await httpClient.DeleteAsync(requestUri, cancellationToken).WithoutCapturingContext();
+
+            return await httpResponse.ToApiResponseAsync<Department>(jsonOptions, cancellationToken).WithoutCapturingContext();
+        }
+        #endregion
     }
 }

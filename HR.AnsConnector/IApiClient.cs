@@ -1,10 +1,12 @@
-﻿using HR.AnsConnector.Features.Users;
+﻿using HR.AnsConnector.Features.Departments;
+using HR.AnsConnector.Features.Users;
 using HR.AnsConnector.Infrastructure;
 
 namespace HR.AnsConnector
 {
     public interface IApiClient
     {
+        #region Users
         /// <summary>
         /// Create a new user. 
         /// </summary>
@@ -40,5 +42,32 @@ namespace HR.AnsConnector
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task<ApiResponse<IEnumerable<User>>> SearchUsersAsync(UserSearchCriteria criteria, CancellationToken cancellationToken = default);
+        #endregion
+
+        #region Departments
+        /// <summary>
+        /// Create department.
+        /// </summary>
+        /// <param name="department"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<ApiResponse<Department>> CreateDepartmentAsync(Department department, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Update department.
+        /// </summary>
+        /// <param name="department"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<ApiResponse<Department>> UpdateDepartmentAsync(Department department, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Hard delete a department.
+        /// </summary>
+        /// <param name="department"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<ApiResponse<Department>> DeleteDepartmentAsync(Department department, CancellationToken cancellationToken = default);
+        #endregion
     }
 }

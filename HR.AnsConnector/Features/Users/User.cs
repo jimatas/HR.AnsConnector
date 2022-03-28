@@ -5,6 +5,9 @@ namespace HR.AnsConnector.Features.Users
 {
     public class User
     {
+        /// <summary>
+        /// The Ans-generated unique id.
+        /// </summary>
         public int? Id { get; set; }
 
         /// <summary>
