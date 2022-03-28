@@ -64,7 +64,6 @@ namespace HR.AnsConnector.Features.Users
 
         /// <summary>
         /// Defines if a user has been soft deleted.
-        /// Default: <c>false</c>
         /// </summary>
         [JsonPropertyName("trashed")]
         public bool? IsDeleted { get; set; }
@@ -94,6 +93,12 @@ namespace HR.AnsConnector.Features.Users
         /// <example>[ 7 ]</example>
         [JsonPropertyName("department_ids")]
         public IEnumerable<int> DepartmentIds { get; set; } = Enumerable.Empty<int>();
+
+        /// <summary>
+        /// Defines if a user is an alumni.
+        /// </summary>
+        [JsonPropertyName("alumni")]
+        public bool IsAlumni { get; set; }
 
         /// <summary>
         /// A unique id for the user which is used for SSO.
