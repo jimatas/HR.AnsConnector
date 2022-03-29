@@ -2,6 +2,9 @@
 
 namespace HR.AnsConnector.Features.Users
 {
+    /// <summary>
+    /// Extends the <see cref="User"/> class by adding metadata properties such as those for event correlation and which action to perform on the data in Ans.
+    /// </summary>
     public class UserRecord : User
     {
         [JsonIgnore]
