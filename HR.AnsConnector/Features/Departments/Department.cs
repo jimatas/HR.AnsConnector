@@ -43,5 +43,8 @@ namespace HR.AnsConnector.Features.Departments
         /// <example>Ext1</example>
         [JsonPropertyName("external_id")]
         public string? ExternalId { get; set; }
+
+        /// <inheritdoc/>
+        public override string ToString() => $"{nameof(Department)} with {nameof(ExternalId)} '{ExternalId}'";
     }
 }

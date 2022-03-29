@@ -1,4 +1,5 @@
-﻿using HR.AnsConnector.Features.Users;
+﻿using HR.AnsConnector.Features.Departments;
+using HR.AnsConnector.Features.Users;
 
 namespace HR.AnsConnector.Infrastructure.Persistence
 {
@@ -8,6 +9,7 @@ namespace HR.AnsConnector.Infrastructure.Persistence
     public interface IDatabase
     {
         Task<UserRecord?> GetNextUserAsync(CancellationToken cancellationToken = default);
+        Task<DepartmentRecord?> GetNextDepartmentAsync(CancellationToken cancellationToken = default);
 
         Task MarkAsHandledAsync(
             bool success,

@@ -1,4 +1,5 @@
-﻿using HR.AnsConnector.Features.Users;
+﻿using HR.AnsConnector.Features.Departments;
+using HR.AnsConnector.Features.Users;
 
 namespace HR.AnsConnector.Infrastructure.Persistence
 {
@@ -17,6 +18,11 @@ namespace HR.AnsConnector.Infrastructure.Persistence
                 EventId = 1,
                 Action = "c"
             });
+        }
+
+        public Task<DepartmentRecord?> GetNextDepartmentAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
         }
 
         public Task MarkAsHandledAsync(
