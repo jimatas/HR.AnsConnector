@@ -1,4 +1,5 @@
-﻿using HR.AnsConnector.Infrastructure;
+﻿using HR.AnsConnector.Features.Departments;
+using HR.AnsConnector.Infrastructure;
 using HR.Common.Utilities;
 
 using Microsoft.Extensions.Options;
@@ -69,6 +70,44 @@ namespace HR.AnsConnector.Tests
             Assert.IsTrue(apiResponse.IsSuccessStatusCode());
             Assert.IsNotNull(apiResponse.Data);
             Assert.IsTrue(apiResponse.Data.Any());
+        }
+
+        [TestMethod]
+        public async Task CompleteLifecycleIntegrationTest()
+        {
+            var apiSettings = CreateApiSettings();
+            using var httpClient = CreateHttpClient(apiSettings);
+            var jsonOptions = CreateJsonOptions();
+
+            IApiClient apiClient = new ApiClient(httpClient, Options.Create(apiSettings), Options.Create(jsonOptions));
+
+            var department = new Department
+            {
+                Name = "FIT_Applicatiebeheer_Webcentrum",
+                ExternalId = "FIT.AB.WEB"
+            };
+
+            var apiResponse = await apiClient.CreateDepartmentAsync(department).WithoutCapturingContext();
+            Assert.IsTrue(apiResponse.IsSuccessStatusCode());
+
+            department = apiResponse!;
+            Assert.IsNotNull(department.Id);
+            Assert.IsNotNull(department.CreatedAt);
+            Assert.AreEqual(department.CreatedAt, department.UpdatedAt);
+
+            department.Name = "Faciliteiten_en_Informatietechnologie_Applicatiebeheer_Webcentrum";
+
+            apiResponse = await apiClient.UpdateDepartmentAsync(department).WithoutCapturingContext();
+
+            Assert.IsTrue(apiResponse.IsSuccessStatusCode());
+
+            department = apiResponse!;
+            Assert.AreEqual("Faciliteiten_en_Informatietechnologie_Applicatiebeheer_Webcentrum", department.Name);
+            Assert.IsNotNull(department.UpdatedAt);
+            Assert.AreNotEqual(department.UpdatedAt, department.CreatedAt);
+
+            apiResponse = await apiClient.DeleteDepartmentAsync(department).WithoutCapturingContext();
+            Assert.IsTrue(apiResponse.IsSuccessStatusCode());
         }
     }
 }
