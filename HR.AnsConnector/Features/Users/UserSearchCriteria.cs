@@ -24,7 +24,7 @@ namespace HR.AnsConnector.Features.Users
         [JsonPropertyName("student_number")]
         public string? StudentNumber { get; set; }
 
-        internal string ToQueryString(JsonNamingPolicy? propertyNamingPolicy = null)
+        public string ToQueryString(JsonNamingPolicy? propertyNamingPolicy = null)
         {
             StringBuilder queryStringBuilder = new();
 
