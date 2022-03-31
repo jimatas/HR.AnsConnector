@@ -1,23 +1,21 @@
 ﻿using HR.AnsConnector.Features.Departments;
 using HR.AnsConnector.Features.Users;
+using HR.Common.Utilities;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace HR.AnsConnector.Infrastructure.Persistence
 {
     public class Database : IDatabase
     {
-        public Task<UserRecord?> GetNextUserAsync(CancellationToken cancellationToken = default)
+        private readonly AnsDbContext dbContext;
+
+        public Database(AnsDbContext dbContext) => this.dbContext = dbContext;
+
+        public async Task<UserRecord?> GetNextUserAsync(CancellationToken cancellationToken = default)
         {
-            return Task.FromResult<UserRecord?>(new()
-            {
-                Email = "atask@hr.nl",
-                FirstName = "Jim",
-                LastName = "Atas",
-                Role = UserRole.Staff,
-                UniqueId = "atask@hro.nl",
-                ExternalId = "atask",
-                EventId = 1,
-                Action = "c"
-            });
+            var users = await dbContext.Users.FromSqlRaw("sync_ans_user_GetNextEvents").AsNoTracking().ToListAsync(cancellationToken).WithoutCapturingContext();
+            return users.SingleOrDefault();
         }
 
         public Task<DepartmentRecord?> GetNextDepartmentAsync(CancellationToken cancellationToken = default)

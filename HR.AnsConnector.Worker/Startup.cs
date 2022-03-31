@@ -3,6 +3,7 @@ using HR.AnsConnector.Infrastructure;
 using HR.AnsConnector.Infrastructure.Persistence;
 using HR.Common.Cqrs.Infrastructure;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 using System.Net.Http.Headers;
@@ -22,6 +23,7 @@ internal class Startup
     {
         services.AddHostedService<Worker>();
         services.AddScoped<IDatabase, Database>();
+        services.AddDbContext<AnsDbContext>(dbContext => dbContext.UseSqlServer(Configuration.GetConnectionString(nameof(AnsDbContext))));
 
         services.AddDispatcher();
         services.AddHandlersFromAssembly(GetType().Assembly);
