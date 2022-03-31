@@ -18,7 +18,7 @@ namespace HR.AnsConnector.Tests
 
             var user = new User
             {
-                Email = "atask@hr.nl",
+                Email = "atask+test1@hr.nl",
                 FirstName = "Jim",
                 LastName = "Atas",
                 UniqueId = "atask",
@@ -47,6 +47,35 @@ namespace HR.AnsConnector.Tests
 
             apiResponse = await apiClient.DeleteUserAsync(user).WithoutCapturingContext();
             Assert.IsTrue(apiResponse.IsSuccessStatusCode());
+        }
+
+        [TestMethod]
+        public async Task CreateUserAsync_GivenExistingUser_UpdatesEmptyPropertiesOnly()
+        {
+            IApiClient apiClient = CreateApiClient();
+
+            var user = new User
+            {
+                Email = "atask+test2@hr.nl",
+                FirstName = "Jim",
+                LastName = "Atas",
+                UniqueId = "atask@hro.nl",
+                ExternalId = "atask",
+                Role = UserRole.Staff,
+            };
+
+            var apiResponse = await apiClient.CreateUserAsync(user).WithoutCapturingContext();
+            Assert.IsTrue(apiResponse.IsSuccessStatusCode());
+
+            user.FirstName = "Jimbo"; // FirstName should not change.
+            user.MiddleName = "van der"; // MiddleName should be updated.
+            apiResponse = await apiClient.CreateUserAsync(user).WithoutCapturingContext();
+
+            Assert.AreEqual(200, apiResponse.StatusCode);
+            Assert.AreEqual("Jim", apiResponse.Data!.FirstName);
+            Assert.AreEqual("van der", apiResponse.Data!.MiddleName);
+
+            await apiClient.DeleteUserAsync(user).WithoutCapturingContext();
         }
     }
 }
