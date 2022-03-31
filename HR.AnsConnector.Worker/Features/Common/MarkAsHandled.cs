@@ -32,6 +32,7 @@ namespace HR.AnsConnector.Features.Common
         /// Its value is generated upon successful creation.
         /// </summary>
         public int? Id { get; }
+
         public int? EventId { get; }
     }
 
@@ -50,8 +51,7 @@ namespace HR.AnsConnector.Features.Common
         {
             await database.MarkAsHandledAsync(
                 command.Success,
-                command.StatusMessage,
-                command.ErrorMessage,
+                command.Success ? null : command.ErrorMessage ?? command.StatusMessage,
                 command.Id,
                 command.EventId,
                 cancellationToken).WithoutCapturingContext();

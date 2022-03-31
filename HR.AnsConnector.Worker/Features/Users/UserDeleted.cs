@@ -16,7 +16,7 @@ namespace HR.AnsConnector.Features.Users
             {
                 UserId = apiResponse.Data!.Id;
             }
-            else
+            else if (apiResponse.ValidationErrors.Any())
             {
                 ErrorMessage = apiResponse.GetValidationErrorsAsSingleMessage();
             }

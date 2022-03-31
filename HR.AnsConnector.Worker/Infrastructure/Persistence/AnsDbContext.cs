@@ -14,6 +14,7 @@ namespace HR.AnsConnector.Infrastructure.Persistence
             builder.ApplyConfigurationsFromAssembly(GetType().Assembly);
             base.OnModelCreating(builder);
         }
+
         public DbSet<UserRecord> Users => Set<UserRecord>();
     }
 }

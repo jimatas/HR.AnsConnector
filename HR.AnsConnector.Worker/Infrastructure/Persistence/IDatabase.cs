@@ -12,11 +12,10 @@ namespace HR.AnsConnector.Infrastructure.Persistence
         Task<DepartmentRecord?> GetNextDepartmentAsync(CancellationToken cancellationToken = default);
 
         Task MarkAsHandledAsync(
-            bool success,
-            string statusMessage, 
-            string? errorMessage, 
+            bool success, 
+            string? message, 
             int? id, 
-            int? eventId,
+            int? eventId, 
             CancellationToken cancellationToken = default);
     }
 }

@@ -23,15 +23,14 @@ namespace HR.AnsConnector.Infrastructure.Persistence
             throw new NotImplementedException();
         }
 
-        public Task MarkAsHandledAsync(
-            bool success, 
-            string statusMessage, 
-            string? errorMessage, 
-            int? id, 
-            int? eventId, 
+        public async Task MarkAsHandledAsync(
+            bool success,
+            string? message,
+            int? id,
+            int? eventId,
             CancellationToken cancellationToken = default)
         {
-            return Task.CompletedTask;
+            await dbContext.Database.ExecuteSqlInterpolatedAsync($"sync_event_MarkHandled {eventId}, {success}, {id?.ToString()}, {message}", cancellationToken).WithoutCapturingContext();
         }
     }
 }
