@@ -2,12 +2,17 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HR.AnsConnector.Infrastructure.Persistence.Configurations
 {
     internal class UserRecordConfiguration : IEntityTypeConfiguration<UserRecord>
     {
+        private static readonly IDictionary<string, UserRole> roleMappings = new Dictionary<string, UserRole>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "Student", UserRole.Student },
+            { "Teacher", UserRole.Staff },
+        };
+
         public void Configure(EntityTypeBuilder<UserRecord> builder)
         {
             builder.HasNoKey();
@@ -22,7 +27,10 @@ namespace HR.AnsConnector.Infrastructure.Persistence.Configurations
                 .Ignore(u => u.DepartmentIds)
                 .Ignore(u => u.IsAlumni);
 
-            builder.Property(u => u.Role).HasConversion(new EnumToStringConverter<UserRole>());
+            builder.Property(u => u.Role).HasConversion(
+                convertToProviderExpression: (UserRole? role) => null,
+                convertFromProviderExpression: (string? role) => roleMappings[role!]);
+
             builder.Property(u => u.EventId).HasColumnName("SyncEventId");
             builder.Property(u => u.Action).HasColumnName("SyncAction");
         }
