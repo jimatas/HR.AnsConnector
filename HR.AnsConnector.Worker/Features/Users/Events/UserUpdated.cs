@@ -1,56 +1,56 @@
-﻿using HR.AnsConnector.Features.Common;
+﻿using HR.AnsConnector.Features.Common.Commands;
 using HR.AnsConnector.Infrastructure;
 using HR.Common.Cqrs.Commands;
 using HR.Common.Cqrs.Events;
 using HR.Common.Utilities;
 
-namespace HR.AnsConnector.Features.Departments
+namespace HR.AnsConnector.Features.Users.Events
 {
-    public class DepartmentUpdated : IEvent
+    public class UserUpdated : IEvent
     {
-        public DepartmentUpdated(DepartmentRecord department, ApiResponse<Department> apiResponse)
+        public UserUpdated(UserRecord user, ApiResponse<User> apiResponse)
         {
             StatusMessage = apiResponse.GetStatusMessage();
             Success = apiResponse.IsSuccessStatusCode();
             if (Success)
             {
-                DepartmentId = apiResponse.Data!.Id;
+                UserId = apiResponse.Data!.Id;
             }
             else if (apiResponse.ValidationErrors.Any())
             {
                 ErrorMessage = apiResponse.GetValidationErrorsAsSingleMessage();
             }
-            EventId = department.EventId;
+            EventId = user.EventId;
         }
 
         public bool Success { get; }
         public string StatusMessage { get; }
         public string? ErrorMessage { get; }
-        public int? DepartmentId { get; }
+        public int? UserId { get; }
         public int? EventId { get; }
     }
 
-    public class DepartmentUpdatedHandler : IEventHandler<DepartmentUpdated>
+    public class UserUpdatedHandler : IEventHandler<UserUpdated>
     {
         private readonly ICommandDispatcher commandDispatcher;
         private readonly ILogger logger;
 
-        public DepartmentUpdatedHandler(ICommandDispatcher commandDispatcher, ILogger<DepartmentUpdatedHandler> logger)
+        public UserUpdatedHandler(ICommandDispatcher commandDispatcher, ILogger<UserUpdatedHandler> logger)
         {
             this.commandDispatcher = commandDispatcher;
             this.logger = logger;
         }
 
-        public async Task HandleAsync(DepartmentUpdated e, CancellationToken cancellationToken)
+        public async Task HandleAsync(UserUpdated e, CancellationToken cancellationToken)
         {
-            logger.LogDebug($"Handling {nameof(DepartmentUpdated)} event by dispatching {nameof(MarkAsHandled)} command.");
+            logger.LogDebug($"Handling {nameof(UserUpdated)} event by dispatching {nameof(MarkAsHandled)} command.");
 
             await commandDispatcher.DispatchAsync(
                 new MarkAsHandled(
                     e.Success,
                     e.StatusMessage,
                     e.ErrorMessage,
-                    e.DepartmentId,
+                    e.UserId,
                     e.EventId),
                 cancellationToken).WithoutCapturingContext();
         }

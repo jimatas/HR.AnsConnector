@@ -1,9 +1,10 @@
-﻿using HR.AnsConnector.Infrastructure;
+﻿using HR.AnsConnector.Features.Users.Events;
+using HR.AnsConnector.Infrastructure;
 using HR.Common.Cqrs.Commands;
 using HR.Common.Cqrs.Events;
 using HR.Common.Utilities;
 
-namespace HR.AnsConnector.Features.Users
+namespace HR.AnsConnector.Features.Users.Commands
 {
     public class DeleteUser : ICommand
     {

@@ -1,10 +1,10 @@
-﻿using HR.AnsConnector.Features.Common;
+﻿using HR.AnsConnector.Features.Common.Commands;
 using HR.AnsConnector.Infrastructure;
 using HR.Common.Cqrs.Commands;
 using HR.Common.Cqrs.Events;
 using HR.Common.Utilities;
 
-namespace HR.AnsConnector.Features.Users
+namespace HR.AnsConnector.Features.Users.Events
 {
     public class UserDeleted : IEvent
     {

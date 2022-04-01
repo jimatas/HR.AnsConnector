@@ -2,7 +2,7 @@
 using HR.Common.Cqrs.Queries;
 using HR.Common.Utilities;
 
-namespace HR.AnsConnector.Features.Departments
+namespace HR.AnsConnector.Features.Departments.Queries
 {
     public class GetNextDepartment : IQuery<DepartmentRecord?>
     {

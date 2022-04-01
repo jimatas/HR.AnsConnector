@@ -2,7 +2,7 @@
 using HR.Common.Cqrs.Commands;
 using HR.Common.Utilities;
 
-namespace HR.AnsConnector.Features.Common
+namespace HR.AnsConnector.Features.Common.Commands
 {
     public class MarkAsHandled : ICommand
     {

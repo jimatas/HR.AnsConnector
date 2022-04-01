@@ -1,15 +1,10 @@
-﻿using HR.AnsConnector.Infrastructure;
+﻿using HR.AnsConnector.Features.Departments.Events;
+using HR.AnsConnector.Infrastructure;
 using HR.Common.Cqrs.Commands;
 using HR.Common.Cqrs.Events;
 using HR.Common.Utilities;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HR.AnsConnector.Features.Departments
+namespace HR.AnsConnector.Features.Departments.Commands
 {
     public class UpdateDepartment : ICommand
     {

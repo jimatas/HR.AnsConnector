@@ -1,14 +1,14 @@
-﻿using HR.AnsConnector.Features.Common;
+﻿using HR.AnsConnector.Features.Common.Commands;
 using HR.AnsConnector.Infrastructure;
 using HR.Common.Cqrs.Commands;
 using HR.Common.Cqrs.Events;
 using HR.Common.Utilities;
 
-namespace HR.AnsConnector.Features.Users
+namespace HR.AnsConnector.Features.Users.Events
 {
-    public class UserUpdated : IEvent
+    public class UserCreated : IEvent
     {
-        public UserUpdated(UserRecord user, ApiResponse<User> apiResponse)
+        public UserCreated(UserRecord user, ApiResponse<User> apiResponse)
         {
             StatusMessage = apiResponse.GetStatusMessage();
             Success = apiResponse.IsSuccessStatusCode();
@@ -30,20 +30,20 @@ namespace HR.AnsConnector.Features.Users
         public int? EventId { get; }
     }
 
-    public class UserUpdatedHandler : IEventHandler<UserUpdated>
+    public class UserCreatedHandler : IEventHandler<UserCreated>
     {
         private readonly ICommandDispatcher commandDispatcher;
         private readonly ILogger logger;
 
-        public UserUpdatedHandler(ICommandDispatcher commandDispatcher, ILogger<UserUpdatedHandler> logger)
+        public UserCreatedHandler(ICommandDispatcher commandDispatcher, ILogger<UserCreatedHandler> logger)
         {
             this.commandDispatcher = commandDispatcher;
             this.logger = logger;
         }
 
-        public async Task HandleAsync(UserUpdated e, CancellationToken cancellationToken)
+        public async Task HandleAsync(UserCreated e, CancellationToken cancellationToken)
         {
-            logger.LogDebug($"Handling {nameof(UserUpdated)} event by dispatching {nameof(MarkAsHandled)} command.");
+            logger.LogDebug($"Handling {nameof(UserCreated)} event by dispatching {nameof(MarkAsHandled)} command.");
 
             await commandDispatcher.DispatchAsync(
                 new MarkAsHandled(

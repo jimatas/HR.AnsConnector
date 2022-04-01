@@ -2,7 +2,7 @@
 using HR.Common.Cqrs.Queries;
 using HR.Common.Utilities;
 
-namespace HR.AnsConnector.Features.Users
+namespace HR.AnsConnector.Features.Users.Queries
 {
     public class GetNextUser : IQuery<UserRecord?>
     {

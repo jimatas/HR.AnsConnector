@@ -1,14 +1,14 @@
-﻿using HR.AnsConnector.Features.Common;
+﻿using HR.AnsConnector.Features.Common.Commands;
 using HR.AnsConnector.Infrastructure;
 using HR.Common.Cqrs.Commands;
 using HR.Common.Cqrs.Events;
 using HR.Common.Utilities;
 
-namespace HR.AnsConnector.Features.Departments
+namespace HR.AnsConnector.Features.Departments.Events
 {
-    public class DepartmentCreated : IEvent
+    public class DepartmentUpdated : IEvent
     {
-        public DepartmentCreated(DepartmentRecord department, ApiResponse<Department> apiResponse)
+        public DepartmentUpdated(DepartmentRecord department, ApiResponse<Department> apiResponse)
         {
             StatusMessage = apiResponse.GetStatusMessage();
             Success = apiResponse.IsSuccessStatusCode();
@@ -30,20 +30,20 @@ namespace HR.AnsConnector.Features.Departments
         public int? EventId { get; }
     }
 
-    public class DepartmentCreatedHandler : IEventHandler<DepartmentCreated>
+    public class DepartmentUpdatedHandler : IEventHandler<DepartmentUpdated>
     {
         private readonly ICommandDispatcher commandDispatcher;
         private readonly ILogger logger;
 
-        public DepartmentCreatedHandler(ICommandDispatcher commandDispatcher, ILogger<DepartmentCreatedHandler> logger)
+        public DepartmentUpdatedHandler(ICommandDispatcher commandDispatcher, ILogger<DepartmentUpdatedHandler> logger)
         {
             this.commandDispatcher = commandDispatcher;
             this.logger = logger;
         }
 
-        public async Task HandleAsync(DepartmentCreated e, CancellationToken cancellationToken)
+        public async Task HandleAsync(DepartmentUpdated e, CancellationToken cancellationToken)
         {
-            logger.LogDebug($"Handling {nameof(DepartmentCreated)} event by dispatching {nameof(MarkAsHandled)} command.");
+            logger.LogDebug($"Handling {nameof(DepartmentUpdated)} event by dispatching {nameof(MarkAsHandled)} command.");
 
             await commandDispatcher.DispatchAsync(
                 new MarkAsHandled(

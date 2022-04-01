@@ -1,8 +1,9 @@
-﻿using HR.Common.Cqrs.Commands;
+﻿using HR.AnsConnector.Features.Users.Queries;
+using HR.Common.Cqrs.Commands;
 using HR.Common.Cqrs.Queries;
 using HR.Common.Utilities;
 
-namespace HR.AnsConnector.Features.Users
+namespace HR.AnsConnector.Features.Users.Commands
 {
     public class ProcessUsers : ICommand
     {
