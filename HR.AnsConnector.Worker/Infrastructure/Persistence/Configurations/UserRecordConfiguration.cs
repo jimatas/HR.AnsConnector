@@ -17,8 +17,7 @@ namespace HR.AnsConnector.Infrastructure.Persistence.Configurations
         {
             builder.HasNoKey();
 
-            builder.Ignore(u => u.Id)
-                .Ignore(u => u.CreatedAt)
+            builder.Ignore(u => u.CreatedAt)
                 .Ignore(u => u.UpdatedAt)
                 .Ignore(u => u.IsActive)
                 .Ignore(u => u.IsDeleted)
@@ -31,6 +30,7 @@ namespace HR.AnsConnector.Infrastructure.Persistence.Configurations
                 convertToProviderExpression: (UserRole? role) => null, // No need to map back to provider type.
                 convertFromProviderExpression: (string? role) => !string.IsNullOrEmpty(role) && roleMappings.ContainsKey(role) ? roleMappings[role] : null);
 
+            builder.Property(u => u.Id).HasColumnName("SyncExternalKey").HasConversion<string>();
             builder.Property(u => u.EventId).HasColumnName("SyncEventId");
             builder.Property(u => u.Action).HasColumnName("SyncAction");
         }
