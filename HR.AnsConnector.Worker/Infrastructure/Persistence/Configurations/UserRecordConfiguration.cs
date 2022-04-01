@@ -27,9 +27,9 @@ namespace HR.AnsConnector.Infrastructure.Persistence.Configurations
                 .Ignore(u => u.DepartmentIds)
                 .Ignore(u => u.IsAlumni);
 
-            builder.Property(u => u.Role).HasConversion(
-                convertToProviderExpression: (UserRole? role) => null,
-                convertFromProviderExpression: (string? role) => roleMappings[role!]);
+            _ = builder.Property(u => u.Role).HasConversion(
+                convertToProviderExpression: (UserRole? role) => null, // No need to map back to provider type.
+                convertFromProviderExpression: (string? role) => !string.IsNullOrEmpty(role) && roleMappings.ContainsKey(role) ? roleMappings[role] : null);
 
             builder.Property(u => u.EventId).HasColumnName("SyncEventId");
             builder.Property(u => u.Action).HasColumnName("SyncAction");
