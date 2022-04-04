@@ -193,5 +193,95 @@ namespace HR.AnsConnector.Tests
             Assert.AreEqual(200, apiClient.LastApiResponse?.StatusCode);
             Assert.AreEqual(0, database.Users.Count);
         }
+
+        [TestMethod]
+        public async Task GivenUserToDeleteInNonDeleteContext_DoesNothing()
+        {
+            // Arrange
+            var user = new UserRecord
+            {
+                Action = "d",
+                EventId = 1001,
+                Id = 12345,
+                FirstName = "Jim",
+                LastName = "Atas",
+                Email = "atask@hr.nl",
+                Role = UserRole.Staff,
+                UniqueId = "atask@hro.nl",
+                ExternalId = "atask"
+            };
+
+            var database = new FakeDatabase();
+            database.Users.Enqueue(user);
+
+            var apiClient = new FakeApiClient();
+
+            var serviceProvider = CreateServiceProvider(database, apiClient);
+
+            var commandDispatcher = serviceProvider.GetRequiredService<ICommandDispatcher>();
+            var eventSpy = serviceProvider.GetServices<IEventHandler<UserDeleted>>().OfType<EventHandlerSpy>().Single();
+
+            // Act
+            await commandDispatcher.DispatchAsync(new ProcessUsers(isDeleteContext: false)).WithoutCapturingContext();
+
+            // Assert
+            Assert.IsFalse(eventSpy.IsUserDeletedCalled);
+            Assert.AreEqual(1, database.Users.Count);
+        }
+
+        [TestMethod]
+        public async Task GivenUserToUpdate_UpdatesUser()
+        {
+            // Arrange
+            var user = new UserRecord
+            {
+                Action = "u",
+                EventId = 1001,
+                Id = 12345,
+                FirstName = "Jim",
+                LastName = "Atas",
+                Email = "atask@hr.nl",
+                Role = UserRole.Staff,
+                UniqueId = "atask@hro.nl",
+                ExternalId = "atask"
+            };
+
+            var database = new FakeDatabase();
+            database.Users.Enqueue(user);
+
+            var apiResponse = new ApiResponse<User>
+            {
+                StatusCode = 200,
+                StatusDescription = "OK",
+                Data = new User
+                {
+                    Id = 12345,
+                    FirstName = "Jim",
+                    LastName = "Atas",
+                    Email = "atask@hr.nl",
+                    Role = UserRole.Staff,
+                    UniqueId = "atask@hro.nl",
+                    ExternalId = "atask",
+                    CreatedAt = DateTime.Now.AddMinutes(-10),
+                    UpdatedAt = DateTime.Now,
+                }
+            };
+
+            var apiClient = new FakeApiClient();
+            apiClient.ExpectedApiResponses.Enqueue(apiResponse);
+
+            var serviceProvider = CreateServiceProvider(database, apiClient);
+
+            var commandDispatcher = serviceProvider.GetRequiredService<ICommandDispatcher>();
+            var eventSpy = serviceProvider.GetServices<IEventHandler<UserUpdated>>().OfType<EventHandlerSpy>().Single();
+
+            // Act
+            await commandDispatcher.DispatchAsync(new ProcessUsers()).WithoutCapturingContext();
+
+            // Assert
+            Assert.IsTrue(eventSpy.IsUserUpdatedCalled);
+            Assert.AreEqual(200, apiClient.LastApiResponse?.StatusCode);
+            Assert.AreEqual(0, database.Users.Count);
+        }
     }
 }
