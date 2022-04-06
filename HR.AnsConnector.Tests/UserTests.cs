@@ -18,11 +18,11 @@ namespace HR.AnsConnector.Tests
 
             var user = new User
             {
-                Email = "atask+test1@hr.nl",
+                Email = "atask-test1@hr.nl",
                 FirstName = "Jim",
                 LastName = "Atas",
-                UniqueId = "atask",
-                ExternalId = "atask@hro.nl",
+                UniqueId = "atask-test1@hro.nl",
+                ExternalId = "atask1",
                 Role = UserRole.Staff,
             };
 
@@ -56,11 +56,11 @@ namespace HR.AnsConnector.Tests
 
             var user = new User
             {
-                Email = "atask+test2@hr.nl",
+                Email = "atask-test2@hr.nl",
                 FirstName = "Jim",
                 LastName = "Atas",
-                UniqueId = "atask@hro.nl",
-                ExternalId = "atask",
+                UniqueId = "atask-test2@hro.nl",
+                ExternalId = "atask2",
                 Role = UserRole.Staff,
             };
 
