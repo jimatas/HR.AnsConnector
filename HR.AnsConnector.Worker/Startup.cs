@@ -49,5 +49,7 @@ internal class Startup
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("HR.AnsConnector.Infrastructure.ApiClient", "1.0"));
         });
+
+        services.AddLogging(logging => logging.AddFile(Configuration.GetSection("Serilog:FileLogging")));
     }
 }
