@@ -95,7 +95,7 @@ namespace HR.AnsConnector.Tests
             var eventSpy = serviceProvider.GetServices<IEventHandler<UserCreated>>().OfType<EventHandlerSpy>().Single();
 
             // Act
-            await commandDispatcher.DispatchAsync(new ProcessUsers()).WithoutCapturingContext();
+            await commandDispatcher.DispatchAsync(new ProcessUsers(batchSize: 1)).WithoutCapturingContext();
 
             // Assert
             Assert.IsTrue(eventSpy.IsUserCreatedCalled);
@@ -130,7 +130,7 @@ namespace HR.AnsConnector.Tests
             var eventSpy = serviceProvider.GetServices<IEventHandler<UserCreated>>().OfType<EventHandlerSpy>().Single();
 
             // Act
-            await commandDispatcher.DispatchAsync(new ProcessUsers(isDeleteContext: true)).WithoutCapturingContext();
+            await commandDispatcher.DispatchAsync(new ProcessUsers(batchSize: 1, isDeleteContext: true)).WithoutCapturingContext();
 
             // Assert
             Assert.IsFalse(eventSpy.IsUserCreatedCalled);
@@ -186,7 +186,7 @@ namespace HR.AnsConnector.Tests
             var eventSpy = serviceProvider.GetServices<IEventHandler<UserDeleted>>().OfType<EventHandlerSpy>().Single();
 
             // Act
-            await commandDispatcher.DispatchAsync(new ProcessUsers(isDeleteContext: true)).WithoutCapturingContext();
+            await commandDispatcher.DispatchAsync(new ProcessUsers(batchSize: 1, isDeleteContext: true)).WithoutCapturingContext();
 
             // Assert
             Assert.IsTrue(eventSpy.IsUserDeletedCalled);
@@ -222,7 +222,7 @@ namespace HR.AnsConnector.Tests
             var eventSpy = serviceProvider.GetServices<IEventHandler<UserDeleted>>().OfType<EventHandlerSpy>().Single();
 
             // Act
-            await commandDispatcher.DispatchAsync(new ProcessUsers(isDeleteContext: false)).WithoutCapturingContext();
+            await commandDispatcher.DispatchAsync(new ProcessUsers(batchSize: 1, isDeleteContext: false)).WithoutCapturingContext();
 
             // Assert
             Assert.IsFalse(eventSpy.IsUserDeletedCalled);
@@ -276,7 +276,7 @@ namespace HR.AnsConnector.Tests
             var eventSpy = serviceProvider.GetServices<IEventHandler<UserUpdated>>().OfType<EventHandlerSpy>().Single();
 
             // Act
-            await commandDispatcher.DispatchAsync(new ProcessUsers()).WithoutCapturingContext();
+            await commandDispatcher.DispatchAsync(new ProcessUsers(batchSize: 1)).WithoutCapturingContext();
 
             // Assert
             Assert.IsTrue(eventSpy.IsUserUpdatedCalled);

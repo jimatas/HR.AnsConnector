@@ -7,11 +7,13 @@ namespace HR.AnsConnector.Features.Users.Commands
 {
     public class ProcessUsers : ICommand
     {
-        public ProcessUsers(bool isDeleteContext = false)
+        public ProcessUsers(int batchSize, bool isDeleteContext = false)
         {
+            BatchSize = batchSize;
             IsDeleteContext = isDeleteContext;
         }
 
+        public int BatchSize { get; set; }
         public bool IsDeleteContext { get; }
     }
 
@@ -34,7 +36,7 @@ namespace HR.AnsConnector.Features.Users.Commands
                 updated = 0,
                 deleted = 0;
 
-            while (!cancellationToken.IsCancellationRequested)
+            for (var i = 0; i < command.BatchSize; i++)
             {
                 var nextUser = await queryDispatcher.DispatchAsync(new GetNextUser(), cancellationToken).WithoutCapturingContext();
                 if (nextUser is null || ((nextUser.IsToBeCreated() || nextUser.IsToBeUpdated()) && command.IsDeleteContext) || (nextUser.IsToBeDeleted() && !command.IsDeleteContext))

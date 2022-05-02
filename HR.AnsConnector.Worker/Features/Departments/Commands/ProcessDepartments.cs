@@ -7,11 +7,13 @@ namespace HR.AnsConnector.Features.Departments.Commands
 {
     public class ProcessDepartments : ICommand
     {
-        public ProcessDepartments(bool isDeleteContext = false)
+        public ProcessDepartments(int batchSize, bool isDeleteContext = false)
         {
+            BatchSize = batchSize;
             IsDeleteContext = isDeleteContext;
         }
 
+        public int BatchSize { get; set; }
         public bool IsDeleteContext { get; }
     }
 
@@ -34,7 +36,7 @@ namespace HR.AnsConnector.Features.Departments.Commands
                 updated = 0,
                 deleted = 0;
 
-            while (!cancellationToken.IsCancellationRequested)
+            for (var i = 0; i < command.BatchSize; i++)
             {
                 var nextDepartment = await queryDispatcher.DispatchAsync(new GetNextDepartment(), cancellationToken).WithoutCapturingContext();
                 if (nextDepartment is null

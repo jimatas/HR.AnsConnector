@@ -29,6 +29,7 @@ internal class Startup
         services.AddHandlersFromAssembly(GetType().Assembly);
 
         services.Configure<ApiSettings>(Configuration.GetSection(nameof(ApiSettings)));
+        services.Configure<BatchSettings>(Configuration.GetSection(nameof(BatchSettings)));
         services.Configure<JsonSerializerOptions>(jsonOptions =>
         {
             jsonOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
