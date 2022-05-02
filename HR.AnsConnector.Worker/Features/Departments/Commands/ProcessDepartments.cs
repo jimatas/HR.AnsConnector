@@ -36,6 +36,8 @@ namespace HR.AnsConnector.Features.Departments.Commands
                 updated = 0,
                 deleted = 0;
 
+            logger.LogInformation("Processing departments to {Action}.", command.IsDeleteContext ? "delete" : "create or update");
+
             for (var i = 0; i < command.BatchSize; i++)
             {
                 var nextDepartment = await queryDispatcher.DispatchAsync(new GetNextDepartment(), cancellationToken).WithoutCapturingContext();
@@ -62,11 +64,17 @@ namespace HR.AnsConnector.Features.Departments.Commands
                     await commandDispatcher.DispatchAsync(new DeleteDepartment(nextDepartment), cancellationToken).WithoutCapturingContext();
                     deleted++;
                 }
-                logger.LogInformation("Processed {Processed} department(s) in total.", created + updated + deleted);
+            }
 
+            logger.LogInformation("Processed {Processed} department(s) in total.", created + updated + deleted);
+            if (command.IsDeleteContext)
+            {
+                logger.LogDebug("Deleted {Deleted} department(s).", deleted);
+            }
+            else
+            {
                 logger.LogDebug("Created {Created} department(s).", created);
                 logger.LogDebug("Updated {Updated} department(s).", updated);
-                logger.LogDebug("Deleted {Deleted} department(s).", deleted);
             }
         }
     }

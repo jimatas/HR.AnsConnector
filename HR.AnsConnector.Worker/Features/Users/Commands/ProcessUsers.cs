@@ -36,6 +36,8 @@ namespace HR.AnsConnector.Features.Users.Commands
                 updated = 0,
                 deleted = 0;
 
+            logger.LogInformation("Processing users to {Action}.", command.IsDeleteContext ? "delete" : "create or update");
+
             for (var i = 0; i < command.BatchSize; i++)
             {
                 var nextUser = await queryDispatcher.DispatchAsync(new GetNextUser(), cancellationToken).WithoutCapturingContext();
@@ -61,11 +63,17 @@ namespace HR.AnsConnector.Features.Users.Commands
                     deleted++;
                 }
             }
+
             logger.LogInformation("Processed {Processed} user(s) in total.", created + updated + deleted);
-            
-            logger.LogDebug("Created {Created} user(s).", created);
-            logger.LogDebug("Updated {Updated} user(s).", updated);
-            logger.LogDebug("Deleted {Deleted} user(s).", deleted);
+            if (command.IsDeleteContext)
+            {
+                logger.LogDebug("Deleted {Deleted} user(s).", deleted);
+            }
+            else
+            {
+                logger.LogDebug("Created {Created} user(s).", created);
+                logger.LogDebug("Updated {Updated} user(s).", updated);
+            }
         }
     }
 }
