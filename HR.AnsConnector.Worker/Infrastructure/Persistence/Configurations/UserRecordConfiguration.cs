@@ -11,6 +11,7 @@ namespace HR.AnsConnector.Infrastructure.Persistence.Configurations
         {
             { "Student", UserRole.Student },
             { "Teacher", UserRole.Staff },
+            { "Staff", UserRole.Staff },
         };
 
         public void Configure(EntityTypeBuilder<UserRecord> builder)

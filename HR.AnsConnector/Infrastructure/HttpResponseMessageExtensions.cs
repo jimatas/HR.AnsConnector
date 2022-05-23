@@ -30,7 +30,7 @@ namespace HR.AnsConnector.Infrastructure
             }
             else if (httpResponse.StatusCode == HttpStatusCode.UnprocessableEntity && httpResponse.RequestMessage?.Method != HttpMethod.Get)
             {
-                var validationErrors = await httpResponse.Content.ReadFromJsonAsync<IDictionary<string, IEnumerable<string>>>(jsonOptions, cancellationToken).WithoutCapturingContext();
+                var validationErrors = await httpResponse.Content.ReadFromJsonAsync<IDictionary<string, IEnumerable<object>>>(jsonOptions, cancellationToken).WithoutCapturingContext();
                 if (validationErrors is not null && validationErrors.Any())
                 {
                     apiResponse.ValidationErrors = validationErrors;
@@ -41,7 +41,7 @@ namespace HR.AnsConnector.Infrastructure
                 var validationErrors = await httpResponse.Content.ReadFromJsonAsync<IDictionary<string, string>>(jsonOptions, cancellationToken).WithoutCapturingContext();
                 if (validationErrors is not null && validationErrors.Count == 1)
                 {
-                    apiResponse.ValidationErrors = new Dictionary<string, IEnumerable<string>> { { validationErrors.Single().Key, new[] { validationErrors.Single().Value } } };
+                    apiResponse.ValidationErrors = new Dictionary<string, IEnumerable<object>> { { validationErrors.Single().Key, new[] { validationErrors.Single().Value } } };
                 }
             }
 

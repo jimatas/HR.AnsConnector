@@ -10,7 +10,7 @@
         /// <summary>
         /// A possibly empty collection of field level validation errors, keyed by field name.
         /// </summary>
-        public IEnumerable<KeyValuePair<string, IEnumerable<string>>> ValidationErrors { get; internal set; } = new Dictionary<string, IEnumerable<string>>();
+        public IEnumerable<KeyValuePair<string, IEnumerable<object>>> ValidationErrors { get; internal set; } = new Dictionary<string, IEnumerable<object>>();
 
         /// <summary>
         /// Supports the implicit conversion from <see cref="ApiResponse{T}"/> to <typeparamref name="T"/>.

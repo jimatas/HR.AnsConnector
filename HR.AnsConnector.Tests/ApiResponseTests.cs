@@ -55,7 +55,7 @@ namespace HR.AnsConnector.Tests
             // Arrange
             var apiResponse = new ApiResponse<User>
             {
-                ValidationErrors = new Dictionary<string, IEnumerable<string>>
+                ValidationErrors = new Dictionary<string, IEnumerable<object>>
                 {
                     { "email", new[] { "is required" } }
                 }
@@ -74,7 +74,7 @@ namespace HR.AnsConnector.Tests
             // Arrange
             var apiResponse = new ApiResponse<User>
             {
-                ValidationErrors = new Dictionary<string, IEnumerable<string>>
+                ValidationErrors = new Dictionary<string, IEnumerable<object>>
                 {
                     { "email", new[] { "is required", "Length must be 7 characters" } }
                 }
@@ -93,7 +93,7 @@ namespace HR.AnsConnector.Tests
             // Arrange
             var apiResponse = new ApiResponse<User>
             {
-                ValidationErrors = new Dictionary<string, IEnumerable<string>>
+                ValidationErrors = new Dictionary<string, IEnumerable<object>>
                 {
                     { "email", new[] { "is required" } },
                     { "student_number", new[] { "is required" } }

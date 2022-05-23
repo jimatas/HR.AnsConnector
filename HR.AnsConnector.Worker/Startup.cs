@@ -39,6 +39,7 @@ internal class Startup
             jsonOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase; // Web default
             jsonOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
             jsonOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString; // Web default
+            jsonOptions.Converters.Add(new ObjectJsonConverter());
         });
 
         services.AddHttpClient<IApiClient, ApiClient>((IServiceProvider serviceProvider, HttpClient httpClient) =>
