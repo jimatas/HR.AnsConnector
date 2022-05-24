@@ -14,7 +14,7 @@ namespace HR.AnsConnector.Infrastructure.Persistence
 
         public async Task<UserRecord?> GetNextUserAsync(CancellationToken cancellationToken = default)
         {
-            var users = await dbContext.Users.FromSqlRaw("sync_ans_user_GetNextEvents").AsNoTracking().ToListAsync(cancellationToken).WithoutCapturingContext();
+            var users = await dbContext.Users.FromSqlRaw("sync_out_ans_user_GetNextEvents").AsNoTracking().ToListAsync(cancellationToken).WithoutCapturingContext();
             return users.SingleOrDefault();
         }
 
