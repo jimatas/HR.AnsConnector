@@ -1,3 +1,4 @@
+using HR.AnsConnector.Features.Departments.Commands;
 using HR.AnsConnector.Features.Users.Commands;
 using HR.AnsConnector.Infrastructure;
 using HR.Common.Cqrs.Commands;
@@ -28,6 +29,7 @@ namespace HR.AnsConnector
                 logger.LogInformation("Starting new batch run.");
 
                 await commandDispatcher.DispatchAsync(new ProcessUsers(batchSettings.BatchSize, isDeleteContext), stoppingToken).WithoutCapturingContext();
+                await commandDispatcher.DispatchAsync(new ProcessDepartments(batchSettings.BatchSize, isDeleteContext), stoppingToken).WithoutCapturingContext();
                 isDeleteContext = !isDeleteContext;
 
                 logger.LogInformation("Done running batch.");

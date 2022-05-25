@@ -18,17 +18,17 @@ namespace HR.AnsConnector.Infrastructure.Persistence.Configurations
         {
             builder.HasNoKey();
 
-            builder.Ignore(u => u.CreatedAt)
-                .Ignore(u => u.UpdatedAt)
-                .Ignore(u => u.IsActive)
-                .Ignore(u => u.IsDeleted)
-                .Ignore(u => u.DeletedAt)
-                .Ignore(u => u.RoleId)
-                .Ignore(u => u.DepartmentIds)
-                .Ignore(u => u.IsAlumni);
-            
+            builder.Ignore(u => u.CreatedAt);
+            builder.Ignore(u => u.UpdatedAt);
+            builder.Ignore(u => u.IsActive);
+            builder.Ignore(u => u.IsDeleted);
+            builder.Ignore(u => u.DeletedAt);
+            builder.Ignore(u => u.RoleId);
+            builder.Ignore(u => u.DepartmentIds);
+            builder.Ignore(u => u.IsAlumni);
+
             builder.Property(u => u.Role).HasConversion(
-                convertToProviderExpression: (UserRole? role) => null, // No need to map back to provider type.
+                convertToProviderExpression: (UserRole? role) => role.ToString(),
                 convertFromProviderExpression: (string? role) => !string.IsNullOrEmpty(role) && roleMappings.ContainsKey(role) ? roleMappings[role] : null);
 
             builder.Property(u => u.UniqueId).HasColumnName("Uid");
