@@ -28,7 +28,7 @@ namespace HR.AnsConnector.Infrastructure.Persistence.Configurations
             builder.Ignore(u => u.IsAlumni);
 
             builder.Property(u => u.Role).HasConversion(
-                convertToProviderExpression: (UserRole? role) => role.ToString(),
+                convertToProviderExpression: (UserRole? role) => role != null ? role.ToString() : null,
                 convertFromProviderExpression: (string? role) => !string.IsNullOrEmpty(role) && roleMappings.ContainsKey(role) ? roleMappings[role] : null);
 
             builder.Property(u => u.UniqueId).HasColumnName("Uid");
