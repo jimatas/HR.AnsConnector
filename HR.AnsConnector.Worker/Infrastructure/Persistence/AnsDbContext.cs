@@ -1,4 +1,5 @@
-﻿using HR.AnsConnector.Features.Users;
+﻿using HR.AnsConnector.Features.Departments;
+using HR.AnsConnector.Features.Users;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -16,5 +17,6 @@ namespace HR.AnsConnector.Infrastructure.Persistence
         }
 
         public DbSet<UserRecord> Users => Set<UserRecord>();
+        public DbSet<DepartmentRecord> Departments => Set<DepartmentRecord>();
     }
 }
