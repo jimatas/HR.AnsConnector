@@ -1,5 +1,6 @@
 ﻿using HR.AnsConnector.Features.Departments;
 using HR.AnsConnector.Features.Users;
+using HR.AnsConnector.Infrastructure.Hosting;
 using HR.Common.Utilities;
 
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,7 @@ namespace HR.AnsConnector.Infrastructure.Persistence
 
         public async Task<UserRecord?> GetNextUserAsync(CancellationToken cancellationToken = default)
         {
-            var sprocName = GetEnvironmentSpecificSprocName("sync_out_ans_{0}_user_GetNextEvents");
+            var sprocName = string.Format("sync_out_ans_{0}_user_GetNextEvents", environment.GetStoredProcedureEnvironmentName());
             logger.LogDebug("Executing stored procedure '{SprocName}'.", sprocName);
 
             var users = await dbContext.Users.FromSqlRaw(sprocName).AsNoTracking().ToListAsync(cancellationToken).WithoutCapturingContext();
@@ -30,7 +31,7 @@ namespace HR.AnsConnector.Infrastructure.Persistence
 
         public async Task<DepartmentRecord?> GetNextDepartmentAsync(CancellationToken cancellationToken = default)
         {
-            var sprocName = GetEnvironmentSpecificSprocName("sync_out_ans_{0}_department_GetNextEvents");
+            var sprocName = string.Format("sync_out_ans_{0}_department_GetNextEvents", environment.GetStoredProcedureEnvironmentName());
             logger.LogDebug("Executing stored procedure '{SprocName}'.", sprocName);
 
             var departments = await dbContext.Departments.FromSqlRaw(sprocName).AsNoTracking().ToListAsync(cancellationToken).WithoutCapturingContext();
@@ -47,11 +48,6 @@ namespace HR.AnsConnector.Infrastructure.Persistence
             logger.LogDebug("Executing stored procedure 'sync_event_MarkHandled'.");
 
             await dbContext.Database.ExecuteSqlInterpolatedAsync($"sync_event_MarkHandled {eventId}, {success}, {id?.ToString()}, {message}", cancellationToken).WithoutCapturingContext();
-        }
-
-        private string GetEnvironmentSpecificSprocName(string sprocName)
-        {
-            return string.Format(sprocName, environment.IsProduction() ? "prod" : "test");
         }
     }
 }
