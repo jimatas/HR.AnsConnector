@@ -10,7 +10,7 @@ namespace HR.AnsConnector.Infrastructure.Persistence
     {
         private readonly AnsDbContext dbContext;
         private readonly IHostEnvironment environment;
-        private readonly ILogger<Database> logger;
+        private readonly ILogger logger;
 
         public Database(AnsDbContext dbContext, IHostEnvironment environment, ILogger<Database> logger)
         {
