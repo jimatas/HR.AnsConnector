@@ -172,5 +172,36 @@ namespace HR.AnsConnector.Tests
             Assert.AreEqual(200, apiClient.LastApiResponse?.StatusCode);
             Assert.AreEqual(0, database.Departments.Count);
         }
+
+        [TestMethod]
+        public async Task GivenDepartmentToDeleteInNonDeleteContext_DoesNothing()
+        {
+            // Arrange
+            var department = new DepartmentRecord
+            {
+                Action = "d",
+                EventId = 1002,
+                Id = 56789,
+                Name = "Faciliteiten & Informatietechnologie",
+                ExternalId = "FIT"
+            };
+
+            var database = new FakeDatabase();
+            database.Departments.Enqueue(department);
+
+            var apiClient = new FakeApiClient();
+
+            var serviceProvider = CreateServiceProvider(database, apiClient);
+
+            var commandDispatcher = serviceProvider.GetRequiredService<ICommandDispatcher>();
+            var eventSpy = serviceProvider.GetServices<IEventHandler<DepartmentDeleted>>().OfType<EventHandlerSpy>().Single();
+
+            // Act
+            await commandDispatcher.DispatchAsync(new ProcessDepartments(batchSize: 1, isDeleteContext: false)).WithoutCapturingContext();
+
+            // Assert
+            Assert.IsFalse(eventSpy.IsDepartmentDeletedCalled);
+            Assert.AreEqual(1, database.Departments.Count);
+        }
     }
 }
