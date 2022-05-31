@@ -203,5 +203,51 @@ namespace HR.AnsConnector.Tests
             Assert.IsFalse(eventSpy.IsDepartmentDeletedCalled);
             Assert.AreEqual(1, database.Departments.Count);
         }
+
+        [TestMethod]
+        public async Task GivenDepartmentToUpdate_UpdatesDepartment()
+        {
+            // Arrange
+            var department = new DepartmentRecord
+            {
+                Action = "u",
+                EventId = 1002,
+                Name = "Faciliteiten & Informatietechnologie",
+                ExternalId = "FIT"
+            };
+
+            var database = new FakeDatabase();
+            database.Departments.Enqueue(department);
+
+            var apiResponse = new ApiResponse<Department>
+            {
+                StatusCode = 200,
+                StatusDescription = "OK",
+                Data = new Department
+                {
+                    Id = 56789,
+                    Name = "Faciliteiten & Informatietechnologie",
+                    ExternalId = "FIT",
+                    CreatedAt = DateTime.Now.AddMinutes(-10),
+                    UpdatedAt = DateTime.Now
+                }
+            };
+            
+            var apiClient = new FakeApiClient();
+            apiClient.ExpectedApiResponses.Enqueue(apiResponse);
+
+            var serviceProvider = CreateServiceProvider(database, apiClient);
+
+            var commandDispatcher = serviceProvider.GetRequiredService<ICommandDispatcher>();
+            var eventSpy = serviceProvider.GetServices<IEventHandler<DepartmentUpdated>>().OfType<EventHandlerSpy>().Single();
+
+            // Act
+            await commandDispatcher.DispatchAsync(new ProcessDepartments(batchSize: 1)).WithoutCapturingContext();
+
+            // Assert
+            Assert.IsTrue(eventSpy.IsDepartmentUpdatedCalled);
+            Assert.AreEqual(200, apiClient.LastApiResponse?.StatusCode);
+            Assert.AreEqual(0, database.Users.Count);
+        }
     }
 }
