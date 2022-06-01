@@ -1,4 +1,5 @@
 ﻿using HR.AnsConnector.Features.Departments;
+using HR.AnsConnector.Features.Studies;
 using HR.AnsConnector.Features.Users;
 using HR.Common.Utilities;
 
@@ -95,6 +96,16 @@ namespace HR.AnsConnector.Infrastructure
             using var httpResponse = await httpClient.GetAsync(requestUri, cancellationToken).WithoutCapturingContext();
 
             return await httpResponse.ToApiResponseAsync<IEnumerable<Department>>(jsonOptions, cancellationToken).WithoutCapturingContext();
+        }
+        #endregion
+
+        #region Studies
+        public async Task<ApiResponse<IEnumerable<Study>>> ListStudiesAsync(int departmentId, CancellationToken cancellationToken = default)
+        {
+            var requestUri = $"departments/{departmentId}/studies";
+            using var httpResponse = await httpClient.GetAsync(requestUri, cancellationToken).WithoutCapturingContext();
+
+            return await httpResponse.ToApiResponseAsync<IEnumerable<Study>>(jsonOptions, cancellationToken).WithoutCapturingContext();
         }
         #endregion
     }
