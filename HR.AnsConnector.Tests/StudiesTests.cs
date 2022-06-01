@@ -5,6 +5,8 @@ using HR.Common.Utilities;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HR.AnsConnector.Tests
@@ -23,19 +25,29 @@ namespace HR.AnsConnector.Tests
                 ExternalId = "FIT.AB.WEB"
             };
 
-            var apiResponse = await apiClient.CreateDepartmentAsync(department).WithoutCapturingContext();
+            ApiResponse apiResponse = await apiClient.CreateDepartmentAsync(department).WithoutCapturingContext();
             Assert.IsTrue(apiResponse.IsSuccessStatusCode());
-            department = apiResponse!;
+            department = ((ApiResponse<Department>)apiResponse)!;
 
             var study = new Study
             {
-                Name = "Programmeren 101",
-                ExternalId = "PROG-101",
+                Name = "Applicatieontwikkeling",
+                ExternalId = "AOD",
                 DepartmentId = department.Id,
             };
-            await apiClient.CreateStudyAsync(study).WithoutCapturingContext();
+            apiResponse = await apiClient.CreateStudyAsync(study).WithoutCapturingContext();
+            Assert.IsTrue(apiResponse.IsSuccessStatusCode());
 
-            var studies = await apiClient.ListStudiesAsync((int)department.Id!).WithoutCapturingContext();
+            apiResponse = await apiClient.ListStudiesAsync((int)department.Id!).WithoutCapturingContext();
+            Assert.IsTrue(apiResponse.IsSuccessStatusCode());
+
+            var studies = ((ApiResponse<IEnumerable<Study>>)apiResponse).Data!;
+            Assert.AreEqual(1, studies.Count());
+            study = studies.Single();
+            Assert.AreEqual("Applicatieontwikkeling", study.Name);
+
+            apiResponse = await apiClient.DeleteStudyAsync(study).WithoutCapturingContext();
+            Assert.IsTrue(apiResponse.IsSuccessStatusCode());
 
             await apiClient.DeleteDepartmentAsync(department).WithoutCapturingContext();
         }

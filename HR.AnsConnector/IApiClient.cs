@@ -88,6 +88,14 @@ namespace HR.AnsConnector
         Task<ApiResponse<Study>> CreateStudyAsync(Study study, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Hard delete a study.
+        /// </summary>
+        /// <param name="study"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<ApiResponse<Study>> DeleteStudyAsync(Study study, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// List all studies of the department.
         /// </summary>
         /// <param name="departmentId"></param>
