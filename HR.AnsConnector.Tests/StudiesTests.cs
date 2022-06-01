@@ -1,4 +1,5 @@
 ﻿using HR.AnsConnector.Features.Departments;
+using HR.AnsConnector.Features.Studies;
 using HR.AnsConnector.Infrastructure;
 using HR.Common.Utilities;
 
@@ -26,9 +27,15 @@ namespace HR.AnsConnector.Tests
             Assert.IsTrue(apiResponse.IsSuccessStatusCode());
             department = apiResponse!;
 
-            //var departments = await apiClient.ListDepartmentsAsync().WithoutCapturingContext();
+            var study = new Study
+            {
+                Name = "Programmeren 101",
+                ExternalId = "PROG-101",
+                DepartmentId = department.Id,
+            };
+            await apiClient.CreateStudyAsync(study).WithoutCapturingContext();
 
-            await apiClient.ListStudiesAsync((int)department.Id!).WithoutCapturingContext();
+            var studies = await apiClient.ListStudiesAsync((int)department.Id!).WithoutCapturingContext();
 
             await apiClient.DeleteDepartmentAsync(department).WithoutCapturingContext();
         }

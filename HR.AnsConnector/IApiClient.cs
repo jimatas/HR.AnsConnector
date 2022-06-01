@@ -80,6 +80,14 @@ namespace HR.AnsConnector
 
         #region Studies
         /// <summary>
+        /// Create study.
+        /// </summary>
+        /// <param name="study"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<ApiResponse<Study>> CreateStudyAsync(Study study, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// List all studies of the department.
         /// </summary>
         /// <param name="departmentId"></param>

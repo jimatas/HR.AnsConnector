@@ -100,6 +100,16 @@ namespace HR.AnsConnector.Infrastructure
         #endregion
 
         #region Studies
+        /// <inheritdoc/>
+        public async Task<ApiResponse<Study>> CreateStudyAsync(Study study, CancellationToken cancellationToken = default)
+        {
+            var requestUri = $"departments/{study.DepartmentId}/studies";
+            using var httpResponse = await httpClient.PostAsync(requestUri, JsonContent.Create(study, mediaType: null, jsonOptions), cancellationToken).WithoutCapturingContext();
+
+            return await httpResponse.ToApiResponseAsync<Study>(jsonOptions, cancellationToken).WithoutCapturingContext();
+        }
+
+        /// <inheritdoc/>
         public async Task<ApiResponse<IEnumerable<Study>>> ListStudiesAsync(int departmentId, CancellationToken cancellationToken = default)
         {
             var requestUri = $"departments/{departmentId}/studies";

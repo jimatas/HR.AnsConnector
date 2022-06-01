@@ -43,6 +43,9 @@ namespace HR.AnsConnector.Tests.Fixture
         #endregion
 
         #region Studies
+        public Task<ApiResponse<Study>> CreateStudyAsync(Study study, CancellationToken cancellationToken = default)
+            => Task.FromResult((ApiResponse<Study>)(LastApiResponse = ExpectedApiResponses.Dequeue()));
+
         public Task<ApiResponse<IEnumerable<Study>>> ListStudiesAsync(int departmentId, CancellationToken cancellationToken = default)
             => Task.FromResult((ApiResponse<IEnumerable<Study>>)(LastApiResponse = ExpectedApiResponses.Dequeue()));
         #endregion
