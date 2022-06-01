@@ -67,6 +67,7 @@ namespace HR.AnsConnector.Tests
             var apiResponse = await apiClient.CreateUserAsync(user).WithoutCapturingContext();
             Assert.IsTrue(apiResponse.IsSuccessStatusCode());
 
+            user = apiResponse!;
             user.FirstName = "Jimbo"; // FirstName should not change.
             user.MiddleName = "van der"; // MiddleName should be updated.
             apiResponse = await apiClient.CreateUserAsync(user).WithoutCapturingContext();
