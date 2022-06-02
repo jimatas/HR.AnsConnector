@@ -110,6 +110,15 @@ namespace HR.AnsConnector.Infrastructure
         }
 
         /// <inheritdoc/>
+        public async Task<ApiResponse<Study>> UpdateStudyAsync(Study study, CancellationToken cancellationToken = default)
+        {
+            var requestUri = $"studies/{study.Id}";
+            using var httpResponse = await httpClient.PatchAsync(requestUri, JsonContent.Create(study, mediaType: null, jsonOptions), cancellationToken).WithoutCapturingContext();
+
+            return await httpResponse.ToApiResponseAsync<Study>(jsonOptions, cancellationToken).WithoutCapturingContext();
+        }
+
+        /// <inheritdoc/>
         public async Task<ApiResponse<Study>> DeleteStudyAsync(Study study, CancellationToken cancellationToken = default)
         {
             var requestUri = $"studies/{study.Id}";
