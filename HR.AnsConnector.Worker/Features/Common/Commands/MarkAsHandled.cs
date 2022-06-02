@@ -23,7 +23,7 @@ namespace HR.AnsConnector.Features.Common.Commands
         public string StatusMessage { get; }
 
         /// <summary>
-        /// Any validation errors that were returned by the server; flattened to a single error message.
+        /// Any validation errors that were returned by the server, flattened to a single error message.
         /// </summary>
         public string? ErrorMessage { get; }
 
@@ -56,7 +56,10 @@ namespace HR.AnsConnector.Features.Common.Commands
                 command.EventId,
                 cancellationToken).WithoutCapturingContext();
 
-            logger.LogInformation("Marked object with Id {Id} as handled in database.", command.Id?.ToString() ?? "[n/a]");
+            logger.LogInformation("Marked object with Id {Id} and SyncEventId {EventId} as handled {Success} in database.",
+                command.Id?.ToString() ?? "[n/a]",
+                command.EventId,
+                command.Success ? "successfully" : "unsuccessfully");
         }
     }
 }
