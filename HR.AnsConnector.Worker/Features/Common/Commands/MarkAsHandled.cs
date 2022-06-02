@@ -56,10 +56,9 @@ namespace HR.AnsConnector.Features.Common.Commands
                 command.EventId,
                 cancellationToken).WithoutCapturingContext();
 
-            logger.LogInformation("Marked object with Id {Id} and SyncEventId {EventId} as handled {Success} in database.",
+            logger.LogInformation("Marked object with Id {Id} and EventId {EventId} as handled in database.",
                 command.Id?.ToString() ?? "[n/a]",
-                command.EventId,
-                command.Success ? "successfully" : "unsuccessfully");
+                command.EventId?.ToString() ?? "[n/a]");
         }
     }
 }
