@@ -46,6 +46,13 @@ namespace HR.AnsConnector.Tests
             study = studies.Single();
             Assert.AreEqual("Applicatieontwikkeling", study.Name);
 
+            study.Name = "Ontwikkelingen op applicatievlak";
+            apiResponse = await apiClient.UpdateStudyAsync(study).WithoutCapturingContext();
+            Assert.IsTrue(apiResponse.IsSuccessStatusCode());
+            
+            study = ((ApiResponse<Study>)apiResponse)!;
+            Assert.AreEqual("Ontwikkelingen op applicatievlak", study.Name);
+
             apiResponse = await apiClient.DeleteStudyAsync(study).WithoutCapturingContext();
             Assert.IsTrue(apiResponse.IsSuccessStatusCode());
 
