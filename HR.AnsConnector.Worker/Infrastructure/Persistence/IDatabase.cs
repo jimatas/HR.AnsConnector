@@ -1,4 +1,5 @@
 ﻿using HR.AnsConnector.Features.Departments;
+using HR.AnsConnector.Features.Studies;
 using HR.AnsConnector.Features.Users;
 
 namespace HR.AnsConnector.Infrastructure.Persistence
@@ -10,12 +11,13 @@ namespace HR.AnsConnector.Infrastructure.Persistence
     {
         Task<UserRecord?> GetNextUserAsync(CancellationToken cancellationToken = default);
         Task<DepartmentRecord?> GetNextDepartmentAsync(CancellationToken cancellationToken = default);
+        Task<StudyRecord?> GetNextStudyAsync(CancellationToken cancellationToken = default);
 
         Task MarkAsHandledAsync(
-            bool success, 
-            string? message, 
-            int? id, 
-            int? eventId, 
+            bool success,
+            string? message,
+            int? id,
+            int? eventId,
             CancellationToken cancellationToken = default);
     }
 }
