@@ -36,6 +36,10 @@ namespace HR.AnsConnector.Tests.Fixture
             {
                 Departments.Dequeue();
             }
+            else if (Studies.TryPeek(out var study) && study.EventId == eventId)
+            {
+                Studies.Dequeue();
+            }
             else
             {
                 throw new AssertFailedException($"Could not mark event {eventId} as handled. "
