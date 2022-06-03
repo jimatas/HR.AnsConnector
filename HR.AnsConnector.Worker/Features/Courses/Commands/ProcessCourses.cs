@@ -41,6 +41,30 @@ namespace HR.AnsConnector.Features.Courses.Commands
             for (var i = 0; i < command.BatchSize; i++)
             {
                 var nextCourse = await queryDispatcher.DispatchAsync(new GetNextCourse(), cancellationToken).WithoutCapturingContext();
+                if (nextCourse is null
+                    || ((nextCourse.IsToBeCreated() || nextCourse.IsToBeUpdated()) && command.IsDeleteContext)
+                    || nextCourse.IsToBeDeleted() && !command.IsDeleteContext)
+                {
+                    logger.LogInformation("No more courses to {Action}. Ending batch run.", command.IsDeleteContext ? "delete" : "create or update");
+                    break;
+                }
+
+                if (nextCourse.IsToBeCreated())
+                {
+                    await commandDispatcher.DispatchAsync(new CreateCourse(nextCourse), cancellationToken).WithoutCapturingContext();
+                    created++;
+                }
+            }
+
+            logger.LogInformation("Processed {Processed} course(s) in total.", created + updated + deleted);
+            if (command.IsDeleteContext)
+            {
+                logger.LogDebug("Deleted {Deleted} course(s).", deleted);
+            }
+            else
+            {
+                logger.LogDebug("Created {Created} course(s).", created);
+                logger.LogDebug("Updated {Updated} course(s).", updated);
             }
         }
     }

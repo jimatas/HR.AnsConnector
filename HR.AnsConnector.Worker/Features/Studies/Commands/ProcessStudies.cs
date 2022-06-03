@@ -69,7 +69,7 @@ namespace HR.AnsConnector.Features.Studies.Commands
             logger.LogInformation("Processed {Processed} stud(y)(ies) in total.", created + updated + deleted);
             if (command.IsDeleteContext)
             {
-                logger.LogDebug("Deleted {Deleted} studies.", deleted);
+                logger.LogDebug("Deleted {Deleted} stud(y)(ies).", deleted);
             }
             else
             {
