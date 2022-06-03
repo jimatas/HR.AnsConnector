@@ -1,4 +1,5 @@
-﻿using HR.AnsConnector.Infrastructure;
+﻿using HR.AnsConnector.Features.Courses;
+using HR.AnsConnector.Infrastructure;
 using HR.Common.Utilities;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -24,6 +25,33 @@ namespace HR.AnsConnector.Tests
             Assert.IsTrue(apiResponse.IsSuccessStatusCode());
             Assert.IsNotNull(apiResponse.Data);
             Assert.IsTrue(apiResponse.Data.Any());
+        }
+
+        [TestMethod]
+        public async Task CompleteLifecycleIntegrationTest()
+        {
+            IApiClient apiClient = CreateApiClient();
+
+            var course = new Course
+            {
+                Name = "Programmeren in .NET (C#)",
+                CourseCode = "NETPROG-01",
+                ExternalId = "FIT.AB.NETPROG-01",
+                Year = 2022,
+                SelfEnroll = true,
+            };
+
+            var apiResponse = await apiClient.CreateCourseAsync(course).WithoutCapturingContext();
+            Assert.IsTrue(apiResponse.IsSuccessStatusCode());
+
+            course = apiResponse!;
+            Assert.IsNotNull(course.Id);
+
+            apiResponse = await apiClient.DeleteCourseAsync(course).WithoutCapturingContext();
+            Assert.IsTrue(apiResponse.IsSuccessStatusCode());
+
+            course = apiResponse!;
+            Assert.IsTrue(course.IsDeleted);
         }
     }
 }

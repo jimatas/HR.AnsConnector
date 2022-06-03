@@ -115,11 +115,27 @@ namespace HR.AnsConnector
 
         #region Courses
         /// <summary>
+        /// Create course.
+        /// </summary>
+        /// <param name="course"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<ApiResponse<Course>> CreateCourseAsync(Course course, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// List courses.
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task<ApiResponse<IEnumerable<Course>>> ListCoursesAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Soft delete a course by moving it to removed courses.
+        /// </summary>
+        /// <param name="course"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<ApiResponse<Course>> DeleteCourseAsync(Course course, CancellationToken cancellationToken = default);
         #endregion
     }
 }

@@ -140,12 +140,30 @@ namespace HR.AnsConnector.Infrastructure
 
         #region Courses
         /// <inheritdoc/>
+        public async Task<ApiResponse<Course>> CreateCourseAsync(Course course, CancellationToken cancellationToken = default)
+        {
+            var requestUri = $"schools/{apiSettings.TenantId}/courses";
+            using var httpResponse = await httpClient.PostAsync(requestUri, JsonContent.Create(course, mediaType: null, jsonOptions), cancellationToken).WithoutCapturingContext();
+
+            return await httpResponse.ToApiResponseAsync<Course>(jsonOptions, cancellationToken).WithoutCapturingContext();
+        }
+
+        /// <inheritdoc/>
         public async Task<ApiResponse<IEnumerable<Course>>> ListCoursesAsync(CancellationToken cancellationToken = default)
         {
             var requestUri = $"schools/{apiSettings.TenantId}/courses";
             using var httpResponse = await httpClient.GetAsync(requestUri, cancellationToken).WithoutCapturingContext();
 
             return await httpResponse.ToApiResponseAsync<IEnumerable<Course>>(jsonOptions, cancellationToken).WithoutCapturingContext();
+        }
+
+        /// <inheritdoc/>
+        public async Task<ApiResponse<Course>> DeleteCourseAsync(Course course, CancellationToken cancellationToken = default)
+        {
+            var requestUri = $"courses/{course.Id}";
+            using var httpResponse = await httpClient.DeleteAsync(requestUri, cancellationToken).WithoutCapturingContext();
+
+            return await httpResponse.ToApiResponseAsync<Course>(jsonOptions, cancellationToken).WithoutCapturingContext();
         }
         #endregion
     }
