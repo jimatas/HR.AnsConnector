@@ -93,7 +93,7 @@ namespace HR.AnsConnector.Tests
             // Assert
             Assert.IsTrue(eventSpy.IsDepartmentCreatedCalled);
             Assert.AreEqual(201, apiClient.LastApiResponse?.StatusCode);
-            Assert.AreEqual(0, database.Users.Count);
+            Assert.AreEqual(0, database.Departments.Count);
         }
 
         [TestMethod]
@@ -232,7 +232,7 @@ namespace HR.AnsConnector.Tests
                     UpdatedAt = DateTime.Now
                 }
             };
-            
+
             var apiClient = new FakeApiClient();
             apiClient.ExpectedApiResponses.Enqueue(apiResponse);
 
@@ -247,7 +247,7 @@ namespace HR.AnsConnector.Tests
             // Assert
             Assert.IsTrue(eventSpy.IsDepartmentUpdatedCalled);
             Assert.AreEqual(200, apiClient.LastApiResponse?.StatusCode);
-            Assert.AreEqual(0, database.Users.Count);
+            Assert.AreEqual(0, database.Departments.Count);
         }
     }
 }

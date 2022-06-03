@@ -1,4 +1,5 @@
 ﻿using HR.AnsConnector.Features.Departments.Events;
+using HR.AnsConnector.Features.Studies.Events;
 using HR.AnsConnector.Features.Users.Events;
 using HR.Common.Cqrs.Events;
 
@@ -9,7 +10,8 @@ namespace HR.AnsConnector.Tests.Fixture
 {
     public class EventHandlerSpy : 
         IEventHandler<UserCreated>, IEventHandler<UserUpdated>, IEventHandler<UserDeleted>,
-        IEventHandler<DepartmentCreated>, IEventHandler<DepartmentUpdated>, IEventHandler<DepartmentDeleted>
+        IEventHandler<DepartmentCreated>, IEventHandler<DepartmentUpdated>, IEventHandler<DepartmentDeleted>,
+        IEventHandler<StudyCreated>, IEventHandler<StudyUpdated>, IEventHandler<StudyDeleted>
     {
         public bool IsUserCreatedCalled { get; private set; }
         public bool IsUserUpdatedCalled { get; private set; }
@@ -18,6 +20,10 @@ namespace HR.AnsConnector.Tests.Fixture
         public bool IsDepartmentCreatedCalled { get; private set; }
         public bool IsDepartmentUpdatedCalled { get; private set; }
         public bool IsDepartmentDeletedCalled { get; private set; }
+
+        public bool IsStudyCreatedCalled { get; private set; }
+        public bool IsStudyUpdatedCalled { get; private set; }
+        public bool IsStudyDeletedCalled { get; private set; }
 
         public Task HandleAsync(UserCreated e, CancellationToken cancellationToken)
         {
@@ -52,6 +58,24 @@ namespace HR.AnsConnector.Tests.Fixture
         public Task HandleAsync(DepartmentDeleted e, CancellationToken cancellationToken)
         {
             IsDepartmentDeletedCalled = true;
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(StudyCreated e, CancellationToken cancellationToken)
+        {
+            IsStudyCreatedCalled = true;
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(StudyUpdated e, CancellationToken cancellationToken)
+        {
+            IsStudyUpdatedCalled = true;
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(StudyDeleted e, CancellationToken cancellationToken)
+        {
+            IsStudyDeletedCalled = true;
             return Task.CompletedTask;
         }
     }
