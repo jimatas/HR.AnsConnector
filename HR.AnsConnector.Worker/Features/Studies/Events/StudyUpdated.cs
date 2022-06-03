@@ -6,9 +6,9 @@ using HR.Common.Utilities;
 
 namespace HR.AnsConnector.Features.Studies.Events
 {
-    public class StudyCreated : IEvent
+    public class StudyUpdated : IEvent
     {
-        public StudyCreated(StudyRecord study, ApiResponse<Study> apiResponse)
+        public StudyUpdated(StudyRecord study, ApiResponse<Study> apiResponse)
         {
             Study = study;
             ApiResponse = apiResponse;
@@ -18,20 +18,20 @@ namespace HR.AnsConnector.Features.Studies.Events
         public ApiResponse<Study> ApiResponse { get; }
     }
 
-    public class StudyCreatedHandler : IEventHandler<StudyCreated>
+    public class StudyUpdatedHandler : IEventHandler<StudyUpdated>
     {
         private readonly ICommandDispatcher commandDispatcher;
         private readonly ILogger logger;
 
-        public StudyCreatedHandler(ICommandDispatcher commandDispatcher, ILogger<StudyCreatedHandler> logger)
+        public StudyUpdatedHandler(ICommandDispatcher commandDispatcher, ILogger<StudyUpdatedHandler> logger)
         {
             this.commandDispatcher = commandDispatcher;
             this.logger = logger;
         }
 
-        public async Task HandleAsync(StudyCreated e, CancellationToken cancellationToken)
+        public async Task HandleAsync(StudyUpdated e, CancellationToken cancellationToken)
         {
-            logger.LogDebug($"Handling {nameof(StudyCreated)} event by dispatching {nameof(MarkAsHandled)} command.");
+            logger.LogDebug($"Handling {nameof(StudyUpdated)} event by dispatching {nameof(MarkAsHandled)} command.");
 
             await commandDispatcher.DispatchAsync(
                 new MarkAsHandled(

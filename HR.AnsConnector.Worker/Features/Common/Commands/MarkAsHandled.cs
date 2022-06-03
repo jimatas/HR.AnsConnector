@@ -6,11 +6,17 @@ namespace HR.AnsConnector.Features.Common.Commands
 {
     public class MarkAsHandled : ICommand
     {
-        public MarkAsHandled(bool success, string statusMessage, string? errorMessage, int? id, int? eventId)
+        public MarkAsHandled(
+            bool success,
+            string statusMessage,
+            string? errorMessage,
+            int? id,
+            int? eventId) : this(success, string.IsNullOrEmpty(errorMessage) ? statusMessage : errorMessage, id, eventId) { }
+
+        public MarkAsHandled(bool success, string message, int? id, int? eventId)
         {
             Success = success;
-            StatusMessage = statusMessage;
-            ErrorMessage = errorMessage;
+            Message = message;
             Id = id;
             EventId = eventId;
         }
@@ -18,14 +24,11 @@ namespace HR.AnsConnector.Features.Common.Commands
         public bool Success { get; }
 
         /// <summary>
-        /// The HTTP status code and description of the response. 
+        /// Either any validation errors that were returned by the server, flattened to a single error message 
+        /// -or- 
+        /// the HTTP status code and description of the response.
         /// </summary>
-        public string StatusMessage { get; }
-
-        /// <summary>
-        /// Any validation errors that were returned by the server, flattened to a single error message.
-        /// </summary>
-        public string? ErrorMessage { get; }
+        public string Message { get; }
 
         /// <summary>
         /// The unique id of the element in Ans.
@@ -51,7 +54,7 @@ namespace HR.AnsConnector.Features.Common.Commands
         {
             await database.MarkAsHandledAsync(
                 command.Success,
-                command.Success ? null : command.ErrorMessage ?? command.StatusMessage,
+                command.Success ? null : command.Message,
                 command.Id,
                 command.EventId,
                 cancellationToken).WithoutCapturingContext();
