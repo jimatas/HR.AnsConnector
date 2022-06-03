@@ -54,6 +54,16 @@ namespace HR.AnsConnector.Features.Courses.Commands
                     await commandDispatcher.DispatchAsync(new CreateCourse(nextCourse), cancellationToken).WithoutCapturingContext();
                     created++;
                 }
+                else if (nextCourse.IsToBeUpdated())
+                {
+                    await commandDispatcher.DispatchAsync(new UpdateCourse(nextCourse), cancellationToken).WithoutCapturingContext();
+                    updated++;
+                }
+                else if (nextCourse.IsToBeDeleted())
+                {
+                    await commandDispatcher.DispatchAsync(new DeleteCourse(nextCourse), cancellationToken).WithoutCapturingContext();
+                    deleted++;
+                }
             }
 
             logger.LogInformation("Processed {Processed} course(s) in total.", created + updated + deleted);
