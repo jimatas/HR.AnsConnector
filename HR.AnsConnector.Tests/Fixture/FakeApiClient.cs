@@ -1,4 +1,5 @@
-﻿using HR.AnsConnector.Features.Departments;
+﻿using HR.AnsConnector.Features.Courses;
+using HR.AnsConnector.Features.Departments;
 using HR.AnsConnector.Features.Studies;
 using HR.AnsConnector.Features.Users;
 using HR.AnsConnector.Infrastructure;
@@ -54,6 +55,11 @@ namespace HR.AnsConnector.Tests.Fixture
 
         public Task<ApiResponse<IEnumerable<Study>>> ListStudiesAsync(int departmentId, CancellationToken cancellationToken = default)
             => Task.FromResult((ApiResponse<IEnumerable<Study>>)(LastApiResponse = ExpectedApiResponses.Dequeue()));
+        #endregion
+
+        #region Courses
+        public Task<ApiResponse<IEnumerable<Course>>> ListCoursesAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult((ApiResponse<IEnumerable<Course>>)(LastApiResponse = ExpectedApiResponses.Dequeue()));
         #endregion
     }
 }

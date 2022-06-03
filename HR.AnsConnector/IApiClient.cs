@@ -1,4 +1,5 @@
-﻿using HR.AnsConnector.Features.Departments;
+﻿using HR.AnsConnector.Features.Courses;
+using HR.AnsConnector.Features.Departments;
 using HR.AnsConnector.Features.Studies;
 using HR.AnsConnector.Features.Users;
 using HR.AnsConnector.Infrastructure;
@@ -110,6 +111,15 @@ namespace HR.AnsConnector
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task<ApiResponse<IEnumerable<Study>>> ListStudiesAsync(int departmentId, CancellationToken cancellationToken = default);
+        #endregion
+
+        #region Courses
+        /// <summary>
+        /// List courses.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<ApiResponse<IEnumerable<Course>>> ListCoursesAsync(CancellationToken cancellationToken = default);
         #endregion
     }
 }
