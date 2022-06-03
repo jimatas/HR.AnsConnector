@@ -1,4 +1,5 @@
-﻿using HR.AnsConnector.Features.Departments;
+﻿using HR.AnsConnector.Features.Courses;
+using HR.AnsConnector.Features.Departments;
 using HR.AnsConnector.Features.Studies;
 using HR.AnsConnector.Features.Users;
 using HR.AnsConnector.Infrastructure.Persistence;
@@ -16,6 +17,7 @@ namespace HR.AnsConnector.Tests.Fixture
         public Queue<UserRecord> Users { get; } = new Queue<UserRecord>();
         public Queue<DepartmentRecord> Departments { get; } = new Queue<DepartmentRecord>();
         public Queue<StudyRecord> Studies { get; } = new Queue<StudyRecord>();
+        public Queue<CourseRecord> Courses { get; } = new Queue<CourseRecord>();
 
         public Task<UserRecord?> GetNextUserAsync(CancellationToken cancellationToken = default)
             => Task.FromResult(Users.TryPeek(out var user) ? user : null);
@@ -25,6 +27,9 @@ namespace HR.AnsConnector.Tests.Fixture
 
         public Task<StudyRecord?> GetNextStudyAsync(CancellationToken cancellationToken = default)
             => Task.FromResult(Studies.TryPeek(out var study) ? study : null);
+
+        public Task<CourseRecord?> GetNextCourseAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult(Courses.TryPeek(out var course) ? course : null);
 
         public Task MarkAsHandledAsync(bool success, string? message, int? id, int? eventId, CancellationToken cancellationToken = default)
         {
@@ -39,6 +44,10 @@ namespace HR.AnsConnector.Tests.Fixture
             else if (Studies.TryPeek(out var study) && study.EventId == eventId)
             {
                 Studies.Dequeue();
+            }
+            else if (Courses.TryPeek(out var course) && course.EventId == eventId)
+            {
+                Courses.Dequeue();
             }
             else
             {

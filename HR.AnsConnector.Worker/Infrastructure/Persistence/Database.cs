@@ -1,4 +1,5 @@
-﻿using HR.AnsConnector.Features.Departments;
+﻿using HR.AnsConnector.Features.Courses;
+using HR.AnsConnector.Features.Departments;
 using HR.AnsConnector.Features.Studies;
 using HR.AnsConnector.Features.Users;
 using HR.AnsConnector.Infrastructure.Hosting;
@@ -46,6 +47,15 @@ namespace HR.AnsConnector.Infrastructure.Persistence
 
             var studies = await dbContext.Studies.FromSqlRaw(sprocName).AsNoTracking().ToListAsync(cancellationToken).WithoutCapturingContext();
             return studies.SingleOrDefault();
+        }
+
+        public async Task<CourseRecord?> GetNextCourseAsync(CancellationToken cancellationToken = default)
+        {
+            var sprocName = string.Format("sync_out_ans_{0}_course_GetNextEvents", environment.GetStoredProcedureEnvironmentName());
+            logger.LogDebug("Executing stored procedure '{SprocName}'.", sprocName);
+
+            var courses = await dbContext.Courses.FromSqlRaw(sprocName).AsNoTracking().ToListAsync(cancellationToken).WithoutCapturingContext();
+            return courses.SingleOrDefault();
         }
 
         public async Task MarkAsHandledAsync(
