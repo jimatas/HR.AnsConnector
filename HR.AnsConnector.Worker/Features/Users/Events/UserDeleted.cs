@@ -10,24 +10,12 @@ namespace HR.AnsConnector.Features.Users.Events
     {
         public UserDeleted(UserRecord user, ApiResponse<User> apiResponse)
         {
-            StatusMessage = apiResponse.GetStatusMessage();
-            Success = apiResponse.IsSuccessStatusCode();
-            if (Success)
-            {
-                UserId = apiResponse.Data!.Id;
-            }
-            else if (apiResponse.ValidationErrors.Any())
-            {
-                ErrorMessage = apiResponse.GetValidationErrorsAsSingleMessage();
-            }
-            EventId = user.EventId;
+            User = user;
+            ApiResponse = apiResponse;
         }
 
-        public bool Success { get; }
-        public string StatusMessage { get; }
-        public string? ErrorMessage { get; }
-        public int? UserId { get; }
-        public int? EventId { get; }
+        public UserRecord User { get; }
+        public ApiResponse<User> ApiResponse { get; }
     }
 
     public class UserDeletedHandler : IEventHandler<UserDeleted>
@@ -47,11 +35,11 @@ namespace HR.AnsConnector.Features.Users.Events
 
             await commandDispatcher.DispatchAsync(
                 new MarkAsHandled(
-                    e.Success,
-                    e.StatusMessage,
-                    e.ErrorMessage,
-                    e.UserId,
-                    e.EventId),
+                    e.ApiResponse.IsSuccessStatusCode(),
+                    e.ApiResponse.GetStatusMessage(),
+                    e.ApiResponse.GetValidationErrorsAsSingleMessage(),
+                    e.ApiResponse.Data?.Id,
+                    e.User.EventId),
                 cancellationToken).WithoutCapturingContext();
         }
     }

@@ -10,24 +10,12 @@ namespace HR.AnsConnector.Features.Departments.Events
     {
         public DepartmentDeleted(DepartmentRecord department, ApiResponse<Department> apiResponse)
         {
-            StatusMessage = apiResponse.GetStatusMessage();
-            Success = apiResponse.IsSuccessStatusCode();
-            if (Success)
-            {
-                DepartmentId = apiResponse.Data!.Id;
-            }
-            else if (apiResponse.ValidationErrors.Any())
-            {
-                ErrorMessage = apiResponse.GetValidationErrorsAsSingleMessage();
-            }
-            EventId = department.EventId;
+            Department = department;
+            ApiResponse = apiResponse;
         }
 
-        public bool Success { get; }
-        public string StatusMessage { get; }
-        public string? ErrorMessage { get; }
-        public int? DepartmentId { get; }
-        public int? EventId { get; }
+        public DepartmentRecord Department { get; }
+        public ApiResponse<Department> ApiResponse { get; }
     }
 
     public class DepartmentDeletedHandler : IEventHandler<DepartmentDeleted>
@@ -47,11 +35,11 @@ namespace HR.AnsConnector.Features.Departments.Events
 
             await commandDispatcher.DispatchAsync(
                 new MarkAsHandled(
-                    e.Success,
-                    e.StatusMessage,
-                    e.ErrorMessage,
-                    e.DepartmentId,
-                    e.EventId),
+                    e.ApiResponse.IsSuccessStatusCode(),
+                    e.ApiResponse.GetStatusMessage(),
+                    e.ApiResponse.GetValidationErrorsAsSingleMessage(),
+                    e.ApiResponse.Data?.Id,
+                    e.Department.EventId),
                 cancellationToken).WithoutCapturingContext();
         }
     }
