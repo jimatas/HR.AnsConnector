@@ -47,6 +47,16 @@ namespace HR.AnsConnector.Tests
             course = apiResponse!;
             Assert.IsNotNull(course.Id);
 
+            course.Year = 2023;
+            course.SelfEnroll = false;
+            apiResponse = await apiClient.UpdateCourseAsync(course).WithoutCapturingContext();
+            Assert.IsTrue(apiResponse.IsSuccessStatusCode());
+
+            course = apiResponse!;
+            Assert.AreNotEqual(course.CreatedAt, course.UpdatedAt);
+            Assert.AreEqual(2023, course.Year);
+            Assert.IsFalse(course.SelfEnroll);
+
             apiResponse = await apiClient.DeleteCourseAsync(course).WithoutCapturingContext();
             Assert.IsTrue(apiResponse.IsSuccessStatusCode());
 
