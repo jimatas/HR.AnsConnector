@@ -61,11 +61,14 @@ namespace HR.AnsConnector.Tests.Fixture
         public Task<ApiResponse<Course>> CreateCourseAsync(Course course, CancellationToken cancellationToken = default)
             => Task.FromResult((ApiResponse<Course>)(LastApiResponse = ExpectedApiResponses.Dequeue()));
 
-        public Task<ApiResponse<IEnumerable<Course>>> ListCoursesAsync(CancellationToken cancellationToken = default)
-            => Task.FromResult((ApiResponse<IEnumerable<Course>>)(LastApiResponse = ExpectedApiResponses.Dequeue()));
+        public Task<ApiResponse<Course>> UpdateCourseAsync(Course course, CancellationToken cancellationToken = default)
+            => Task.FromResult((ApiResponse<Course>)(LastApiResponse = ExpectedApiResponses.Dequeue()));
 
         public Task<ApiResponse<Course>> DeleteCourseAsync(Course course, CancellationToken cancellationToken = default)
             => Task.FromResult((ApiResponse<Course>)(LastApiResponse = ExpectedApiResponses.Dequeue()));
+
+        public Task<ApiResponse<IEnumerable<Course>>> ListCoursesAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult((ApiResponse<IEnumerable<Course>>)(LastApiResponse = ExpectedApiResponses.Dequeue()));
         #endregion
     }
 }

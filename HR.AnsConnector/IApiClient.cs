@@ -123,11 +123,15 @@ namespace HR.AnsConnector
         Task<ApiResponse<Course>> CreateCourseAsync(Course course, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// List courses.
+        /// Update course.
         /// </summary>
+        /// <remarks>
+        /// To update from one role to another, the user must first be removed from the current role list and with a new request added to the chosen role list.
+        /// </remarks>
+        /// <param name="course"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<ApiResponse<IEnumerable<Course>>> ListCoursesAsync(CancellationToken cancellationToken = default);
+        Task<ApiResponse<Course>> UpdateCourseAsync(Course course, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Soft delete a course by moving it to removed courses.
@@ -136,6 +140,13 @@ namespace HR.AnsConnector
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task<ApiResponse<Course>> DeleteCourseAsync(Course course, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// List courses.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<ApiResponse<IEnumerable<Course>>> ListCoursesAsync(CancellationToken cancellationToken = default);
         #endregion
     }
 }

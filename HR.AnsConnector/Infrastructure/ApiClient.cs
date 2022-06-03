@@ -149,12 +149,12 @@ namespace HR.AnsConnector.Infrastructure
         }
 
         /// <inheritdoc/>
-        public async Task<ApiResponse<IEnumerable<Course>>> ListCoursesAsync(CancellationToken cancellationToken = default)
+        public async Task<ApiResponse<Course>> UpdateCourseAsync(Course course, CancellationToken cancellationToken = default)
         {
-            var requestUri = $"schools/{apiSettings.TenantId}/courses";
-            using var httpResponse = await httpClient.GetAsync(requestUri, cancellationToken).WithoutCapturingContext();
+            var requestUri = $"courses/{course.Id}";
+            using var httpResponse = await httpClient.PatchAsync(requestUri, JsonContent.Create(course, mediaType: null, jsonOptions), cancellationToken).WithoutCapturingContext();
 
-            return await httpResponse.ToApiResponseAsync<IEnumerable<Course>>(jsonOptions, cancellationToken).WithoutCapturingContext();
+            return await httpResponse.ToApiResponseAsync<Course>(jsonOptions, cancellationToken).WithoutCapturingContext();
         }
 
         /// <inheritdoc/>
@@ -164,6 +164,15 @@ namespace HR.AnsConnector.Infrastructure
             using var httpResponse = await httpClient.DeleteAsync(requestUri, cancellationToken).WithoutCapturingContext();
 
             return await httpResponse.ToApiResponseAsync<Course>(jsonOptions, cancellationToken).WithoutCapturingContext();
+        }
+
+        /// <inheritdoc/>
+        public async Task<ApiResponse<IEnumerable<Course>>> ListCoursesAsync(CancellationToken cancellationToken = default)
+        {
+            var requestUri = $"schools/{apiSettings.TenantId}/courses";
+            using var httpResponse = await httpClient.GetAsync(requestUri, cancellationToken).WithoutCapturingContext();
+
+            return await httpResponse.ToApiResponseAsync<IEnumerable<Course>>(jsonOptions, cancellationToken).WithoutCapturingContext();
         }
         #endregion
     }
