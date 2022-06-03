@@ -1,3 +1,4 @@
+using HR.AnsConnector.Features.Courses.Commands;
 using HR.AnsConnector.Features.Departments.Commands;
 using HR.AnsConnector.Features.Studies.Commands;
 using HR.AnsConnector.Features.Users.Commands;
@@ -32,6 +33,7 @@ namespace HR.AnsConnector
                 await commandDispatcher.DispatchAsync(new ProcessUsers(batchSettings.BatchSize, isDeleteContext), stoppingToken).WithoutCapturingContext();
                 await commandDispatcher.DispatchAsync(new ProcessDepartments(batchSettings.BatchSize, isDeleteContext), stoppingToken).WithoutCapturingContext();
                 await commandDispatcher.DispatchAsync(new ProcessStudies(batchSettings.BatchSize, isDeleteContext), stoppingToken).WithoutCapturingContext();
+                await commandDispatcher.DispatchAsync(new ProcessCourses(batchSettings.BatchSize, isDeleteContext), stoppingToken).WithoutCapturingContext();
                 isDeleteContext = !isDeleteContext;
 
                 logger.LogInformation("Done running batch.");
