@@ -1,4 +1,5 @@
-﻿using HR.AnsConnector.Features.Departments.Events;
+﻿using HR.AnsConnector.Features.Courses.Events;
+using HR.AnsConnector.Features.Departments.Events;
 using HR.AnsConnector.Features.Studies.Events;
 using HR.AnsConnector.Features.Users.Events;
 using HR.Common.Cqrs.Events;
@@ -8,10 +9,11 @@ using System.Threading.Tasks;
 
 namespace HR.AnsConnector.Tests.Fixture
 {
-    public class EventHandlerSpy : 
+    public class EventHandlerSpy :
         IEventHandler<UserCreated>, IEventHandler<UserUpdated>, IEventHandler<UserDeleted>,
         IEventHandler<DepartmentCreated>, IEventHandler<DepartmentUpdated>, IEventHandler<DepartmentDeleted>,
-        IEventHandler<StudyCreated>, IEventHandler<StudyUpdated>, IEventHandler<StudyDeleted>
+        IEventHandler<StudyCreated>, IEventHandler<StudyUpdated>, IEventHandler<StudyDeleted>,
+        IEventHandler<CourseCreated>, IEventHandler<CourseUpdated>, IEventHandler<CourseDeleted>
     {
         public bool IsUserCreatedCalled { get; private set; }
         public bool IsUserUpdatedCalled { get; private set; }
@@ -24,6 +26,10 @@ namespace HR.AnsConnector.Tests.Fixture
         public bool IsStudyCreatedCalled { get; private set; }
         public bool IsStudyUpdatedCalled { get; private set; }
         public bool IsStudyDeletedCalled { get; private set; }
+
+        public bool IsCourseCreatedCalled { get; private set; }
+        public bool IsCourseUpdatedCalled { get; private set; }
+        public bool IsCourseDeletedCalled { get; private set; }
 
         public Task HandleAsync(UserCreated e, CancellationToken cancellationToken)
         {
@@ -76,6 +82,24 @@ namespace HR.AnsConnector.Tests.Fixture
         public Task HandleAsync(StudyDeleted e, CancellationToken cancellationToken)
         {
             IsStudyDeletedCalled = true;
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(CourseCreated e, CancellationToken cancellationToken)
+        {
+            IsCourseCreatedCalled = true;
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(CourseUpdated e, CancellationToken cancellationToken)
+        {
+            IsCourseUpdatedCalled = true;
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(CourseDeleted e, CancellationToken cancellationToken)
+        {
+            IsCourseDeletedCalled = true;
             return Task.CompletedTask;
         }
     }
