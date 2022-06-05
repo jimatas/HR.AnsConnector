@@ -18,17 +18,11 @@ namespace HR.AnsConnector.Features.Common.Commands
             Success = success;
             Message = message;
             Id = id;
-            EventId = eventId;
+            EventId = (int)eventId!;
         }
 
+        public int EventId { get; }
         public bool Success { get; }
-
-        /// <summary>
-        /// Either any validation errors that were returned by the server, flattened to a single error message 
-        /// -or- 
-        /// the HTTP status code and description of the response.
-        /// </summary>
-        public string Message { get; }
 
         /// <summary>
         /// The unique id of the element in Ans.
@@ -36,7 +30,12 @@ namespace HR.AnsConnector.Features.Common.Commands
         /// </summary>
         public int? Id { get; }
 
-        public int? EventId { get; }
+        /// <summary>
+        /// Either any validation errors that were returned by the server, flattened to a single error message 
+        /// -or- 
+        /// the HTTP status code and description of the response.
+        /// </summary>
+        public string Message { get; }
     }
 
     public class MarkAsHandledHandler : ICommandHandler<MarkAsHandled>
@@ -53,15 +52,15 @@ namespace HR.AnsConnector.Features.Common.Commands
         public async Task HandleAsync(MarkAsHandled command, CancellationToken cancellationToken)
         {
             await database.MarkAsHandledAsync(
-                command.Success,
-                command.Success ? null : command.Message,
-                command.Id,
                 command.EventId,
+                command.Success,
+                command.Id,
+                command.Success ? null : command.Message,
                 cancellationToken).WithoutCapturingContext();
 
             logger.LogInformation("Marked object with Id {Id} and EventId {EventId} as handled in database.",
                 command.Id?.ToString() ?? "[n/a]",
-                command.EventId?.ToString() ?? "[n/a]");
+                command.EventId);
         }
     }
 }

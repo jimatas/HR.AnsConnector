@@ -31,7 +31,7 @@ namespace HR.AnsConnector.Tests.Fixture
         public Task<CourseRecord?> GetNextCourseAsync(CancellationToken cancellationToken = default)
             => Task.FromResult(Courses.TryPeek(out var course) ? course : null);
 
-        public Task MarkAsHandledAsync(bool success, string? message, int? id, int? eventId, CancellationToken cancellationToken = default)
+        public Task MarkAsHandledAsync(int eventId, bool success, int? id, string? message, CancellationToken cancellationToken = default)
         {
             if (Users.TryPeek(out var user) && user.EventId == eventId)
             {
@@ -51,8 +51,8 @@ namespace HR.AnsConnector.Tests.Fixture
             }
             else
             {
-                throw new AssertFailedException($"Could not mark event {eventId} as handled. "
-                    + $"{nameof(IDatabase)}.{nameof(MarkAsHandledAsync)} was not called in the right sequence or it was called at an inappropriate time.");
+                throw new AssertFailedException($"Cannot mark object with event id {eventId} as handled. " +
+                    "Either an object has not yet been retrieved, or the last object retrieved has a different event id.");
             }
 
             return Task.CompletedTask;

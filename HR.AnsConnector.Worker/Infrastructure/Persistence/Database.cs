@@ -59,10 +59,10 @@ namespace HR.AnsConnector.Infrastructure.Persistence
         }
 
         public async Task MarkAsHandledAsync(
+            int eventId,
             bool success,
-            string? message,
             int? id,
-            int? eventId,
+            string? message,
             CancellationToken cancellationToken = default)
         {
             logger.LogDebug("Executing stored procedure 'sync_event_MarkHandled'.");

@@ -16,10 +16,10 @@ namespace HR.AnsConnector.Infrastructure.Persistence
         Task<CourseRecord?> GetNextCourseAsync(CancellationToken cancellationToken = default);
 
         Task MarkAsHandledAsync(
+            int eventId,
             bool success,
-            string? message,
             int? id,
-            int? eventId,
+            string? message,
             CancellationToken cancellationToken = default);
     }
 }
