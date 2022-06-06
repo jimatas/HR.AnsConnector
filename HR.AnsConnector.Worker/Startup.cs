@@ -23,7 +23,9 @@ internal class Startup
     {
         services.AddHostedService<Worker>();
         services.AddScoped<IDatabase, Database>();
-        services.AddDbContext<AnsDbContext>(dbContext => dbContext.UseSqlServer(Configuration.GetConnectionString(nameof(AnsDbContext))));
+        services.AddDbContext<AnsDbContext>(dbContext => dbContext.UseSqlServer(
+            connectionString: Configuration.GetConnectionString(nameof(AnsDbContext)),
+            sqlOptions => sqlOptions.CommandTimeout(60)));
 
         services.AddDispatcher();
         services.AddHandlersFromAssembly(GetType().Assembly);
