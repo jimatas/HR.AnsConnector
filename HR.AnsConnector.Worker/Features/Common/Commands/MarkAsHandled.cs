@@ -6,20 +6,17 @@ namespace HR.AnsConnector.Features.Common.Commands
 {
     public class MarkAsHandled : ICommand
     {
-        public MarkAsHandled(
-            bool success,
-            string statusMessage,
-            string? errorMessage,
-            int? id,
-            int? eventId) : this(success, string.IsNullOrEmpty(errorMessage) ? statusMessage : errorMessage, id, eventId) { }
-
-        public MarkAsHandled(bool success, string message, int? id, int? eventId)
+        public MarkAsHandled(int eventId, bool success, int? id, string? message)
         {
+            EventId = eventId;
             Success = success;
-            Message = message;
             Id = id;
-            EventId = (int)eventId!;
+            Message = message;
         }
+
+        public static MarkAsHandled Successfully(int eventId, int id) => new(eventId, success: true, id, message: string.Empty);
+        public static MarkAsHandled Unsuccessfully(int eventId, string message) => new(eventId, success: false, id: null, message);
+        public static MarkAsHandled Unsuccessfully(int eventId, string statusMessage, string? errorMessage = null) => new(eventId, success: false, id: null, string.IsNullOrEmpty(errorMessage) ? statusMessage : errorMessage);
 
         public int EventId { get; }
         public bool Success { get; }
@@ -35,7 +32,7 @@ namespace HR.AnsConnector.Features.Common.Commands
         /// -or- 
         /// the HTTP status code and description of the response.
         /// </summary>
-        public string Message { get; }
+        public string? Message { get; }
     }
 
     public class MarkAsHandledHandler : ICommandHandler<MarkAsHandled>

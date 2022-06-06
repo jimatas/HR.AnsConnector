@@ -35,11 +35,10 @@ namespace HR.AnsConnector.Features.Studies.Events
 
             await commandDispatcher.DispatchAsync(
                 new MarkAsHandled(
+                    (int)e.Study.EventId!,
                     e.ApiResponse.IsSuccessStatusCode(),
-                    e.ApiResponse.GetStatusMessage(),
-                    e.ApiResponse.GetValidationErrorsAsSingleMessage(),
                     e.ApiResponse.Data?.Id,
-                    e.Study.EventId),
+                    e.ApiResponse.ValidationErrors.Any() ? e.ApiResponse.GetValidationErrorsAsSingleMessage() : e.ApiResponse.GetStatusMessage()),
                 cancellationToken).WithoutCapturingContext();
         }
     }
