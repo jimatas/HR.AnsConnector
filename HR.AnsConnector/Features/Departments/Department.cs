@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace HR.AnsConnector.Features.Departments
 {
@@ -28,7 +27,6 @@ namespace HR.AnsConnector.Features.Departments
         /// The name of the department
         /// </summary>
         /// <example>Department 1</example>
-        [Required]
         public string? Name { get; set; }
 
         /// <summary>

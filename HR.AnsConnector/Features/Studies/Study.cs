@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace HR.AnsConnector.Features.Studies
 {
@@ -28,7 +27,6 @@ namespace HR.AnsConnector.Features.Studies
         /// The name of the study
         /// </summary>
         /// <example>Study 1</example>
-        [Required]
         public string? Name { get; set; }
 
         /// <summary>

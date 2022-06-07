@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace HR.AnsConnector.Features.Users
 {
@@ -55,7 +54,6 @@ namespace HR.AnsConnector.Features.Users
         /// The email tied to the user account.
         /// </summary>
         /// <example>john_doe@ans.app</example>
-        [Required]
         public string? Email { get; set; }
 
         /// <summary>
