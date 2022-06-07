@@ -27,8 +27,7 @@ internal class Startup
             connectionString: Configuration.GetConnectionString(nameof(AnsDbContext)),
             sqlOptions => sqlOptions.CommandTimeout(60)));
 
-        services.AddDispatcher();
-        services.AddHandlersFromAssembly(GetType().Assembly);
+        services.AddDispatcher().AddHandlersFromAssembly(GetType().Assembly);
 
         services.Configure<ApiSettings>(Configuration.GetSection(nameof(ApiSettings)));
         services.Configure<BatchSettings>(Configuration.GetSection(nameof(BatchSettings)));
