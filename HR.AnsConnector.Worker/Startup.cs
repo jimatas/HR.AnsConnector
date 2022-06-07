@@ -6,6 +6,9 @@ using HR.Common.Cqrs.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
+using Polly;
+using Polly.Extensions.Http;
+
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -50,7 +53,7 @@ internal class Startup
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiSettings.BearerToken);
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("HR.AnsConnector.Infrastructure.ApiClient", "1.0"));
-        });
+        }).AddPolicyHandler(HttpPolicyExtensions.HandleTransientHttpError().WaitAndRetryAsync(4, _ => TimeSpan.FromSeconds(15)));
 
         services.AddLogging(logging => logging.AddFile(Configuration.GetSection("Serilog:FileLogging")));
     }

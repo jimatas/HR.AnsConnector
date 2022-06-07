@@ -2,6 +2,8 @@
 using HR.Common.Cqrs.Commands;
 using HR.Common.Utilities;
 
+using System.Data.Common;
+
 namespace HR.AnsConnector.Features.Common.Commands
 {
     public class MarkAsHandledWithRetry : ICommandHandlerWrapper<MarkAsHandled>
@@ -9,7 +11,7 @@ namespace HR.AnsConnector.Features.Common.Commands
         private const int RetryCount = 4; // Excluding the original try.
         private const int RetryDelayInSeconds = 15;
 
-        private readonly ILogger<MarkAsHandledWithRetry> logger;
+        private readonly ILogger logger;
 
         public MarkAsHandledWithRetry(ILogger<MarkAsHandledWithRetry> logger)
         {
@@ -29,8 +31,8 @@ namespace HR.AnsConnector.Features.Common.Commands
             }
             catch (Exception ex) when (IsTimeoutException(ex) && retries > 0)
             {
-                logger.LogWarning("Timeout expired waiting for {CommandName} command to finish. " +
-                    "Attempting retry in {RetryDelay} secs.", nameof(MarkAsHandled), RetryDelayInSeconds);
+                logger.LogWarning("Timeout expired waiting for MarkAsHandled to finish. "
+                    + "Attempting retry in {RetryDelay} secs.", RetryDelayInSeconds);
 
                 await Task.Delay(TimeSpan.FromSeconds(RetryDelayInSeconds), cancellationToken).WithoutCapturingContext();
                 await HandleWithRetryAsync(command, next, retries - 1, cancellationToken).WithoutCapturingContext();
@@ -39,7 +41,7 @@ namespace HR.AnsConnector.Features.Common.Commands
 
         private static bool IsTimeoutException(Exception ex)
         {
-            return ex.Message.Contains("Timeout Expired", StringComparison.OrdinalIgnoreCase)
+            return (ex is DbException && ex.Message.Contains("Timeout Expired", StringComparison.OrdinalIgnoreCase))
                 || (ex.InnerException is not null && IsTimeoutException(ex.InnerException));
         }
     }
