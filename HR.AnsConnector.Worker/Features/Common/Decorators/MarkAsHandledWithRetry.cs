@@ -1,6 +1,9 @@
-﻿using HR.Common.Cqrs;
+﻿using HR.AnsConnector.Infrastructure;
+using HR.Common.Cqrs;
 using HR.Common.Cqrs.Commands;
 using HR.Common.Utilities;
+
+using Microsoft.Extensions.Options;
 
 using System.Data.Common;
 
@@ -8,19 +11,18 @@ namespace HR.AnsConnector.Features.Common.Commands
 {
     public class MarkAsHandledWithRetry : ICommandHandlerWrapper<MarkAsHandled>
     {
-        private const int RetryCount = 4; // Excluding the original try.
-        private const int RetryDelayInSeconds = 15;
-
+        private readonly RecoverySettings recoverySettings;
         private readonly ILogger logger;
 
-        public MarkAsHandledWithRetry(ILogger<MarkAsHandledWithRetry> logger)
+        public MarkAsHandledWithRetry(IOptionsSnapshot<RecoverySettings> recoverySettings, ILogger<MarkAsHandledWithRetry> logger)
         {
+            this.recoverySettings = recoverySettings.Get(RecoverySettings.Names.CommandTimeoutExpired);
             this.logger = logger;
         }
 
         public async Task HandleAsync(MarkAsHandled command, HandlerDelegate next, CancellationToken cancellationToken)
         {
-            await HandleWithRetryAsync(command, next, RetryCount, cancellationToken).WithoutCapturingContext();
+            await HandleWithRetryAsync(command, next, recoverySettings.RetryAttempts, cancellationToken).WithoutCapturingContext();
         }
 
         private async Task HandleWithRetryAsync(MarkAsHandled command, HandlerDelegate next, int retries, CancellationToken cancellationToken)
@@ -31,10 +33,10 @@ namespace HR.AnsConnector.Features.Common.Commands
             }
             catch (Exception ex) when (IsTimeoutException(ex) && retries > 0)
             {
-                logger.LogWarning("Timeout expired waiting for MarkAsHandled to finish. "
-                    + "Attempting retry in {RetryDelay} secs.", RetryDelayInSeconds);
+                logger.LogWarning("Timeout expired waiting for MarkAsHandled command to finish. "
+                    + "Attempting retry in {RetryDelay} secs.", recoverySettings.RetryDelay.TotalSeconds);
 
-                await Task.Delay(TimeSpan.FromSeconds(RetryDelayInSeconds), cancellationToken).WithoutCapturingContext();
+                await Task.Delay(recoverySettings.RetryDelay, cancellationToken).WithoutCapturingContext();
                 await HandleWithRetryAsync(command, next, retries - 1, cancellationToken).WithoutCapturingContext();
             }
         }

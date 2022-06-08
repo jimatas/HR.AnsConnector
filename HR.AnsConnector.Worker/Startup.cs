@@ -32,6 +32,8 @@ internal class Startup
 
         services.AddDispatcher().AddHandlersFromAssembly(GetType().Assembly);
 
+        services.Configure<RecoverySettings>(RecoverySettings.Names.CommandTimeoutExpired, Configuration.GetSection($"{nameof(RecoverySettings)}:{RecoverySettings.Names.CommandTimeoutExpired}"));
+        services.Configure<RecoverySettings>(RecoverySettings.Names.TransientHttpFault, Configuration.GetSection($"{nameof(RecoverySettings)}:{RecoverySettings.Names.TransientHttpFault}"));
         services.Configure<ApiSettings>(Configuration.GetSection(nameof(ApiSettings)));
         services.Configure<BatchSettings>(Configuration.GetSection(nameof(BatchSettings)));
         services.Configure<JsonSerializerOptions>(jsonOptions =>
@@ -53,7 +55,11 @@ internal class Startup
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiSettings.BearerToken);
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("HR.AnsConnector.Infrastructure.ApiClient", "1.0"));
-        }).AddPolicyHandler(HttpPolicyExtensions.HandleTransientHttpError().WaitAndRetryAsync(4, _ => TimeSpan.FromSeconds(15)));
+        }).AddPolicyHandler((serviceProvider, httpRequest) =>
+        {
+            var recoverySettings = serviceProvider.GetRequiredService<IOptionsSnapshot<RecoverySettings>>().Get(RecoverySettings.Names.TransientHttpFault);
+            return HttpPolicyExtensions.HandleTransientHttpError().WaitAndRetryAsync(recoverySettings.RetryAttempts, _ => recoverySettings.RetryDelay);
+        });
 
         services.AddLogging(logging => logging.AddFile(Configuration.GetSection("Serilog:FileLogging")));
     }

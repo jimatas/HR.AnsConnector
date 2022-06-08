@@ -1,6 +1,9 @@
-﻿using HR.Common.Cqrs;
+﻿using HR.AnsConnector.Infrastructure;
+using HR.Common.Cqrs;
 using HR.Common.Cqrs.Queries;
 using HR.Common.Utilities;
+
+using Microsoft.Extensions.Options;
 
 using System.Data.Common;
 
@@ -9,19 +12,18 @@ namespace HR.AnsConnector.Features.Common.Decorators
     public class HandleQueryWithRetry<TQuery, TResult> : IQueryHandlerWrapper<TQuery, TResult>
         where TQuery : IQuery<TResult>
     {
-        private const int RetryCount = 4; // Excluding the original try.
-        private const int RetryDelayInSeconds = 15;
-
+        private readonly RecoverySettings recoverySettings;
         private readonly ILogger logger;
 
-        public HandleQueryWithRetry(ILogger<HandleQueryWithRetry<TQuery, TResult>> logger)
+        public HandleQueryWithRetry(IOptionsSnapshot<RecoverySettings> recoverySettings, ILogger<HandleQueryWithRetry<TQuery, TResult>> logger)
         {
+            this.recoverySettings = recoverySettings.Get(RecoverySettings.Names.CommandTimeoutExpired);
             this.logger = logger;
         }
 
         public async Task<TResult> HandleAsync(TQuery query, HandlerDelegate<TResult> next, CancellationToken cancellationToken)
         {
-            return await HandleWithRetryAsync(query, next, RetryCount, cancellationToken).WithoutCapturingContext();
+            return await HandleWithRetryAsync(query, next, recoverySettings.RetryAttempts, cancellationToken).WithoutCapturingContext();
         }
 
         private async Task<TResult> HandleWithRetryAsync(TQuery query, HandlerDelegate<TResult> next, int retries, CancellationToken cancellationToken)
@@ -32,10 +34,10 @@ namespace HR.AnsConnector.Features.Common.Decorators
             }
             catch (Exception ex) when (IsTimeoutException(ex) && retries > 0)
             {
-                logger.LogWarning("Timeout expired waiting for {QueryName} to finish. "
-                    + "Attempting retry in {RetryDelay} secs.", query.GetType().Name, RetryDelayInSeconds);
+                logger.LogWarning("Timeout expired waiting for {QueryName} query to finish. "
+                    + "Attempting retry in {RetryDelay} secs.", query.GetType().Name, recoverySettings.RetryDelay.TotalSeconds);
 
-                await Task.Delay(TimeSpan.FromSeconds(RetryDelayInSeconds), cancellationToken).WithoutCapturingContext();
+                await Task.Delay(recoverySettings.RetryDelay, cancellationToken).WithoutCapturingContext();
                 return await HandleWithRetryAsync(query, next, retries - 1, cancellationToken).WithoutCapturingContext();
             }
         }
