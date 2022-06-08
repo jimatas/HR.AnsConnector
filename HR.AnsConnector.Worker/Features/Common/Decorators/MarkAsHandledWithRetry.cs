@@ -5,8 +5,6 @@ using HR.Common.Utilities;
 
 using Microsoft.Extensions.Options;
 
-using System.Data.Common;
-
 namespace HR.AnsConnector.Features.Common.Commands
 {
     public class MarkAsHandledWithRetry : ICommandHandlerWrapper<MarkAsHandled>
@@ -31,7 +29,7 @@ namespace HR.AnsConnector.Features.Common.Commands
             {
                 await next().WithoutCapturingContext();
             }
-            catch (Exception ex) when (IsTimeoutException(ex) && retries > 0)
+            catch (Exception ex) when (ex.IsTimeoutException() && retries > 0)
             {
                 logger.LogWarning("Timeout expired waiting for MarkAsHandled command to finish. "
                     + "Attempting retry in {RetryDelay} secs.", recoverySettings.RetryDelay.TotalSeconds);
@@ -39,12 +37,6 @@ namespace HR.AnsConnector.Features.Common.Commands
                 await Task.Delay(recoverySettings.RetryDelay, cancellationToken).WithoutCapturingContext();
                 await HandleWithRetryAsync(command, next, retries - 1, cancellationToken).WithoutCapturingContext();
             }
-        }
-
-        private static bool IsTimeoutException(Exception ex)
-        {
-            return (ex is DbException && ex.Message.Contains("Timeout Expired", StringComparison.OrdinalIgnoreCase))
-                || (ex.InnerException is not null && IsTimeoutException(ex.InnerException));
         }
     }
 }

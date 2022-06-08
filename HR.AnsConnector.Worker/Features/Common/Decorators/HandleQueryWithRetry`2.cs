@@ -5,8 +5,6 @@ using HR.Common.Utilities;
 
 using Microsoft.Extensions.Options;
 
-using System.Data.Common;
-
 namespace HR.AnsConnector.Features.Common.Decorators
 {
     public class HandleQueryWithRetry<TQuery, TResult> : IQueryHandlerWrapper<TQuery, TResult>
@@ -32,7 +30,7 @@ namespace HR.AnsConnector.Features.Common.Decorators
             {
                 return await next().WithoutCapturingContext();
             }
-            catch (Exception ex) when (IsTimeoutException(ex) && retries > 0)
+            catch (Exception ex) when (ex.IsTimeoutException() && retries > 0)
             {
                 logger.LogWarning("Timeout expired waiting for {QueryName} query to finish. "
                     + "Attempting retry in {RetryDelay} secs.", query.GetType().Name, recoverySettings.RetryDelay.TotalSeconds);
@@ -40,12 +38,6 @@ namespace HR.AnsConnector.Features.Common.Decorators
                 await Task.Delay(recoverySettings.RetryDelay, cancellationToken).WithoutCapturingContext();
                 return await HandleWithRetryAsync(query, next, retries - 1, cancellationToken).WithoutCapturingContext();
             }
-        }
-
-        private static bool IsTimeoutException(Exception ex)
-        {
-            return (ex is DbException && ex.Message.Contains("Timeout Expired", StringComparison.OrdinalIgnoreCase))
-                || (ex.InnerException is not null && IsTimeoutException(ex.InnerException));
         }
     }
 }
