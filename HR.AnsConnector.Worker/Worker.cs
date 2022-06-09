@@ -13,32 +13,41 @@ namespace HR.AnsConnector
     public class Worker : BackgroundService
     {
         private readonly ICommandDispatcher commandDispatcher;
-        private readonly ILogger<Worker> logger;
         private readonly BatchSettings batchSettings;
+        private readonly ILogger logger;
 
-        public Worker(ICommandDispatcher commandDispatcher, ILogger<Worker> logger, IOptions<BatchSettings> batchSettings)
+        public Worker(ICommandDispatcher commandDispatcher, IOptions<BatchSettings> batchSettings, ILogger<Worker> logger)
         {
             this.commandDispatcher = commandDispatcher;
-            this.logger = logger;
             this.batchSettings = batchSettings.Value;
+            this.logger = logger;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var isDeleteContext = false;
-            while (!stoppingToken.IsCancellationRequested)
+            try
             {
-                logger.LogInformation("Starting new batch run.");
+                var isDeleteContext = false;
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    logger.LogInformation("Starting new batch run.");
 
-                await commandDispatcher.DispatchAsync(new ProcessUsers(batchSettings.BatchSize, isDeleteContext), stoppingToken).WithoutCapturingContext();
-                await commandDispatcher.DispatchAsync(new ProcessDepartments(batchSettings.BatchSize, isDeleteContext), stoppingToken).WithoutCapturingContext();
-                await commandDispatcher.DispatchAsync(new ProcessStudies(batchSettings.BatchSize, isDeleteContext), stoppingToken).WithoutCapturingContext();
-                await commandDispatcher.DispatchAsync(new ProcessCourses(batchSettings.BatchSize, isDeleteContext), stoppingToken).WithoutCapturingContext();
-                isDeleteContext = !isDeleteContext;
+                    await commandDispatcher.DispatchAsync(new ProcessUsers(batchSettings.BatchSize, isDeleteContext), stoppingToken).WithoutCapturingContext();
+                    await commandDispatcher.DispatchAsync(new ProcessDepartments(batchSettings.BatchSize, isDeleteContext), stoppingToken).WithoutCapturingContext();
+                    await commandDispatcher.DispatchAsync(new ProcessStudies(batchSettings.BatchSize, isDeleteContext), stoppingToken).WithoutCapturingContext();
+                    await commandDispatcher.DispatchAsync(new ProcessCourses(batchSettings.BatchSize, isDeleteContext), stoppingToken).WithoutCapturingContext();
+                    isDeleteContext = !isDeleteContext;
 
-                logger.LogInformation("Done running batch.");
+                    logger.LogInformation("Done running batch.");
 
-                await Task.Delay(batchSettings.TimeDelayBetweenRuns, stoppingToken).WithoutCapturingContext();
+                    await Task.Delay(batchSettings.TimeDelayBetweenRuns, stoppingToken).WithoutCapturingContext();
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogCritical(ex, "BackgroundService failed. The IHost instance will be stopped.");
+
+                Environment.Exit(ex.HResult);
             }
         }
     }

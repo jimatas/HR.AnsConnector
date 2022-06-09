@@ -6,6 +6,10 @@ using HR.Common.Cqrs.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
+using Polly;
+using Polly.Extensions.Http;
+
+using System.ComponentModel.DataAnnotations;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -29,8 +33,25 @@ internal class Startup
 
         services.AddDispatcher().AddHandlersFromAssembly(GetType().Assembly);
 
-        services.Configure<ApiSettings>(Configuration.GetSection(nameof(ApiSettings)));
-        services.Configure<BatchSettings>(Configuration.GetSection(nameof(BatchSettings)));
+        services.Configure<RecoverySettings>(RecoverySettings.Names.CommandTimeoutExpired, Configuration.GetSection($"{nameof(RecoverySettings)}:{RecoverySettings.Names.CommandTimeoutExpired}"))
+            .PostConfigure<RecoverySettings>(RecoverySettings.Names.CommandTimeoutExpired, recoverySettings =>
+        {
+            Validator.ValidateObject(recoverySettings, new ValidationContext(recoverySettings), validateAllProperties: true);
+        });
+        services.Configure<RecoverySettings>(RecoverySettings.Names.TransientHttpFault, Configuration.GetSection($"{nameof(RecoverySettings)}:{RecoverySettings.Names.TransientHttpFault}"))
+            .PostConfigure<RecoverySettings>(RecoverySettings.Names.TransientHttpFault, recoverySettings =>
+        {
+            Validator.ValidateObject(recoverySettings, new ValidationContext(recoverySettings), validateAllProperties: true);
+        });
+        services.Configure<ApiSettings>(Configuration.GetSection(nameof(ApiSettings))).PostConfigure<ApiSettings>(apiSettings =>
+        {
+            Validator.ValidateObject(apiSettings, new ValidationContext(apiSettings), validateAllProperties: true);
+        });
+        services.Configure<BatchSettings>(Configuration.GetSection(nameof(BatchSettings))).PostConfigure<BatchSettings>(batchSettings =>
+        {
+            Validator.ValidateObject(batchSettings, new ValidationContext(batchSettings), validateAllProperties: true);
+        });
+
         services.Configure<JsonSerializerOptions>(jsonOptions =>
         {
             jsonOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
@@ -50,6 +71,10 @@ internal class Startup
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiSettings.BearerToken);
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("HR.AnsConnector.Infrastructure.ApiClient", "1.0"));
+        }).AddPolicyHandler((serviceProvider, httpRequest) =>
+        {
+            var recoverySettings = serviceProvider.GetRequiredService<IOptionsSnapshot<RecoverySettings>>().Get(RecoverySettings.Names.TransientHttpFault);
+            return HttpPolicyExtensions.HandleTransientHttpError().WaitAndRetryAsync(recoverySettings.RetryAttempts, attempt => recoverySettings.CalculateRetryDelay(attempt));
         });
 
         services.AddLogging(logging => logging.AddFile(Configuration.GetSection("Serilog:FileLogging")));
