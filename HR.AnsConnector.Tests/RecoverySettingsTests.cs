@@ -10,6 +10,46 @@ namespace HR.AnsConnector.Tests
     public class RecoverySettingsTests
     {
         [TestMethod]
+        public void NewInstance_HasDefaultValues()
+        {
+            RecoverySettings recovery = new();
+
+            Assert.AreEqual(4, recovery.RetryAttempts);
+            Assert.AreEqual(new TimeSpan(hours: 0, minutes: 0, seconds: 15), recovery.RetryDelay);
+            Assert.AreEqual(1.0, recovery.BackOffFactor);
+        }
+
+        [TestMethod]
+        public void RetryDelay_GivenInvalidValue_ThrowsException()
+        {
+            RecoverySettings recovery = new();
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => recovery.RetryDelay = TimeSpan.FromMilliseconds(-1));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => recovery.RetryDelay = TimeSpan.Zero.Subtract(new TimeSpan(ticks: 1)));
+        }
+
+        [DataTestMethod]
+        [DataRow(-1)]
+        [DataRow(int.MinValue)]
+        public void RetryAttempts_GivenInvalidValue_ThrowsException(int retryAttempts)
+        {
+            RecoverySettings recovery = new();
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => recovery.RetryAttempts = retryAttempts);
+        }
+
+        [DataTestMethod]
+        [DataRow(-1.0)]
+        [DataRow(-0.00001)]
+        [DataRow(double.MinValue)]
+        public void BackOffFactor_GivenInvalidValue_ThrowsException(double backOffFactor)
+        {
+            RecoverySettings recovery = new();
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => recovery.BackOffFactor = backOffFactor);
+        }
+
+        [TestMethod]
         public void CalculateRetryDelay_GivenAttemptZero_ReturnsDelayOfZero()
         {
             var recovery = new RecoverySettings
