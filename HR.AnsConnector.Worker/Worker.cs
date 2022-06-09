@@ -43,9 +43,13 @@ namespace HR.AnsConnector
                     await Task.Delay(batchSettings.TimeDelayBetweenRuns, stoppingToken).WithoutCapturingContext();
                 }
             }
+            catch (TaskCanceledException)
+            {
+                logger.LogWarning("The BackgroundService is stopping because a task was canceled.");
+            }
             catch (Exception ex)
             {
-                logger.LogCritical(ex, "BackgroundService failed. The IHost instance will be stopped.");
+                logger.LogCritical(ex, "The BackgroundService failed.");
 
                 Environment.Exit(ex.HResult);
             }
