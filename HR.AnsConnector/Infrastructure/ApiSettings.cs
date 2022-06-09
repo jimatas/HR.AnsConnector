@@ -9,7 +9,7 @@ namespace HR.AnsConnector.Infrastructure
         /// Default value: https://ans.app/api/v2/
         /// </summary>
         [Required]
-        [RegularExpression("/$", ErrorMessage = "The field {0} must include a trailing slash.")]
+        [RegularExpression(".*/", ErrorMessage = "The field {0} must include a trailing slash.")]
         public string BaseUri { get; set; } = "https://ans.app/api/v2/";
 
         [Required]
