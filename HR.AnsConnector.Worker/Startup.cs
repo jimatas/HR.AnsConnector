@@ -58,7 +58,7 @@ internal class Startup
         }).AddPolicyHandler((serviceProvider, httpRequest) =>
         {
             var recoverySettings = serviceProvider.GetRequiredService<IOptionsSnapshot<RecoverySettings>>().Get(RecoverySettings.Names.TransientHttpFault);
-            return HttpPolicyExtensions.HandleTransientHttpError().WaitAndRetryAsync(recoverySettings.RetryAttempts, _ => recoverySettings.RetryDelay);
+            return HttpPolicyExtensions.HandleTransientHttpError().WaitAndRetryAsync(recoverySettings.RetryAttempts, attempt => recoverySettings.CalculateRetryDelay(attempt));
         });
 
         services.AddLogging(logging => logging.AddFile(Configuration.GetSection("Serilog:FileLogging")));

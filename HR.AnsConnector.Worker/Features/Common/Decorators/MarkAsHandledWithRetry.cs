@@ -31,10 +31,11 @@ namespace HR.AnsConnector.Features.Common.Commands
             }
             catch (Exception ex) when (ex.IsTimeoutException() && retries > 0)
             {
-                logger.LogWarning("Timeout expired waiting for MarkAsHandled command to finish. "
-                    + "Attempting retry in {RetryDelay} secs.", recoverySettings.RetryDelay.TotalSeconds);
+                var retryDelay = recoverySettings.CalculateRetryDelay(recoverySettings.RetryAttempts - (retries - 1));
 
-                await Task.Delay(recoverySettings.RetryDelay, cancellationToken).WithoutCapturingContext();
+                logger.LogWarning("Timeout expired waiting for MarkAsHandled command to finish. Attempting retry in {RetryDelay}", retryDelay);
+
+                await Task.Delay(retryDelay, cancellationToken).WithoutCapturingContext();
                 await HandleWithRetryAsync(command, next, retries - 1, cancellationToken).WithoutCapturingContext();
             }
         }

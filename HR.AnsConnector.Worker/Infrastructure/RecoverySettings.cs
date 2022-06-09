@@ -19,5 +19,11 @@
         /// Default value is 15 seconds.
         /// </summary>
         public TimeSpan RetryDelay { get; set; } = TimeSpan.FromSeconds(15);
+
+        /// <summary>
+        /// The rate at which the <see cref="RetryDelay"/> grows with each subsequent attempt.
+        /// Default value is 1.0, or no growth.
+        /// </summary>
+        public double BackOffFactor { get; set; } = 1.0;
     }
 }
