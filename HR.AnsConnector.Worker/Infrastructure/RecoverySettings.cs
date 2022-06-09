@@ -1,4 +1,4 @@
-﻿using HR.Common.Utilities;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace HR.AnsConnector.Infrastructure
 {
@@ -10,40 +10,27 @@ namespace HR.AnsConnector.Infrastructure
             public const string TransientHttpFault = nameof(TransientHttpFault);
         }
 
-        private int retryAttempts = 4;
-
         /// <summary>
         /// The number of attempts to retry the failed/faulted action.
         /// Default is 4 attempts.
         /// </summary>
-        public int RetryAttempts
-        {
-            get => retryAttempts;
-            set => retryAttempts = Ensure.Argument.NotOutOfRange(() => value, lowerBound: 0);
-        }
-
-        private TimeSpan retryDelay = TimeSpan.FromSeconds(15);
+        [Range(0, int.MaxValue, ErrorMessage = "The field {0} must be greater than or equal to {1}.")]
+        public int RetryAttempts { get; set; } = 4;
 
         /// <summary>
         /// The time delay before a retry attempt.
         /// Default value is 15 seconds.
+        /// Valid range of values is between 00:00:00 (no delay) and 1.00:00:00 (1 day).
         /// </summary>
-        public TimeSpan RetryDelay
-        {
-            get => retryDelay;
-            set => retryDelay = Ensure.Argument.NotOutOfRange(() => value, lowerBound: TimeSpan.Zero);
-        }
-
-        private double backOffFactor = 1.0;
+        [Range(typeof(TimeSpan), "00:00:00", "1.00:00:00")]
+        public TimeSpan RetryDelay { get; set; } = TimeSpan.FromSeconds(15);
 
         /// <summary>
         /// The rate at which the <see cref="RetryDelay"/> grows with each subsequent attempt.
-        /// Default value is 1.0, or no growth.
+        /// Default value is 1.0 (no growth).
+        /// Minimum value is 0.0.
         /// </summary>
-        public double BackOffFactor
-        {
-            get => backOffFactor;
-            set => backOffFactor = Ensure.Argument.NotOutOfRange(() => value, lowerBound: 0.0);
-        }
+        [Range(0.0, double.MaxValue, ErrorMessage = "The field {0} must be greater than or equal to {1}.")]
+        public double BackOffFactor { get; set; } = 1.0;
     }
 }

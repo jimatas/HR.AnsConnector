@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Extensions.Http;
 
+using System.ComponentModel.DataAnnotations;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -32,10 +33,23 @@ internal class Startup
 
         services.AddDispatcher().AddHandlersFromAssembly(GetType().Assembly);
 
-        services.Configure<RecoverySettings>(RecoverySettings.Names.CommandTimeoutExpired, Configuration.GetSection($"{nameof(RecoverySettings)}:{RecoverySettings.Names.CommandTimeoutExpired}"));
-        services.Configure<RecoverySettings>(RecoverySettings.Names.TransientHttpFault, Configuration.GetSection($"{nameof(RecoverySettings)}:{RecoverySettings.Names.TransientHttpFault}"));
-        services.Configure<ApiSettings>(Configuration.GetSection(nameof(ApiSettings)));
-        services.Configure<BatchSettings>(Configuration.GetSection(nameof(BatchSettings)));
+        services.Configure<RecoverySettings>(RecoverySettings.Names.CommandTimeoutExpired, Configuration.GetSection($"{nameof(RecoverySettings)}:{RecoverySettings.Names.CommandTimeoutExpired}")).PostConfigure<RecoverySettings>(recoverySettings =>
+        {
+            Validator.ValidateObject(recoverySettings, new ValidationContext(recoverySettings), validateAllProperties: true);
+        });
+        services.Configure<RecoverySettings>(RecoverySettings.Names.TransientHttpFault, Configuration.GetSection($"{nameof(RecoverySettings)}:{RecoverySettings.Names.TransientHttpFault}")).PostConfigure<RecoverySettings>(recoverySettings =>
+        {
+            Validator.ValidateObject(recoverySettings, new ValidationContext(recoverySettings), validateAllProperties: true);
+        });
+        services.Configure<ApiSettings>(Configuration.GetSection(nameof(ApiSettings))).PostConfigure<ApiSettings>(apiSettings =>
+        {
+            Validator.ValidateObject(apiSettings, new ValidationContext(apiSettings), validateAllProperties: true);
+        });
+        services.Configure<BatchSettings>(Configuration.GetSection(nameof(BatchSettings))).PostConfigure<BatchSettings>(batchSettings =>
+        {
+            Validator.ValidateObject(batchSettings, new ValidationContext(batchSettings), validateAllProperties: true);
+        });
+
         services.Configure<JsonSerializerOptions>(jsonOptions =>
         {
             jsonOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
