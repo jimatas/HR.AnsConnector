@@ -33,11 +33,13 @@ internal class Startup
 
         services.AddDispatcher().AddHandlersFromAssembly(GetType().Assembly);
 
-        services.Configure<RecoverySettings>(RecoverySettings.Names.CommandTimeoutExpired, Configuration.GetSection($"{nameof(RecoverySettings)}:{RecoverySettings.Names.CommandTimeoutExpired}")).PostConfigure<RecoverySettings>(recoverySettings =>
+        services.Configure<RecoverySettings>(RecoverySettings.Names.CommandTimeoutExpired, Configuration.GetSection($"{nameof(RecoverySettings)}:{RecoverySettings.Names.CommandTimeoutExpired}"))
+            .PostConfigure<RecoverySettings>(RecoverySettings.Names.CommandTimeoutExpired, recoverySettings =>
         {
             Validator.ValidateObject(recoverySettings, new ValidationContext(recoverySettings), validateAllProperties: true);
         });
-        services.Configure<RecoverySettings>(RecoverySettings.Names.TransientHttpFault, Configuration.GetSection($"{nameof(RecoverySettings)}:{RecoverySettings.Names.TransientHttpFault}")).PostConfigure<RecoverySettings>(recoverySettings =>
+        services.Configure<RecoverySettings>(RecoverySettings.Names.TransientHttpFault, Configuration.GetSection($"{nameof(RecoverySettings)}:{RecoverySettings.Names.TransientHttpFault}"))
+            .PostConfigure<RecoverySettings>(RecoverySettings.Names.TransientHttpFault, recoverySettings =>
         {
             Validator.ValidateObject(recoverySettings, new ValidationContext(recoverySettings), validateAllProperties: true);
         });
