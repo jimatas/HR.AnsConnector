@@ -28,8 +28,8 @@ namespace HR.AnsConnector.Tests
             ApiSettings CreateApiSettings() => new()
             {
                 BaseUri = baseUri,
-                BearerToken = Environment.GetEnvironmentVariable("ApiSettings:BearerToken", EnvironmentVariableTarget.User),
-                TenantId = int.TryParse(Environment.GetEnvironmentVariable("ApiSettings:TenantId", EnvironmentVariableTarget.User), out var tenantId) ? tenantId : null,
+                BearerToken = Environment.GetEnvironmentVariable("AnsConnector:ApiSettings:BearerToken", EnvironmentVariableTarget.User),
+                TenantId = int.TryParse(Environment.GetEnvironmentVariable("AnsConnector:ApiSettings:TenantId", EnvironmentVariableTarget.User), out var tenantId) ? tenantId : null,
             };
 
             static JsonSerializerOptions CreateJsonOptions()
