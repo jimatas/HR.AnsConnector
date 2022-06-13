@@ -1,6 +1,7 @@
 ﻿using HR.AnsConnector.Features.Courses;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HR.AnsConnector.Infrastructure.Persistence.Configurations
@@ -17,7 +18,11 @@ namespace HR.AnsConnector.Infrastructure.Persistence.Configurations
 
             builder.Property(c => c.StudyIds).HasColumnName("study_id").HasConversion(
                 convertToProviderExpression: (IEnumerable<int> studyIds) => studyIds.Any() ? studyIds.First().ToString() : null,
-                convertFromProviderExpression: (string? studyId) => string.IsNullOrEmpty(studyId) ? Enumerable.Empty<int>() : new[] { int.Parse(studyId) });
+                convertFromProviderExpression: (string? studyId) => string.IsNullOrEmpty(studyId) ? Enumerable.Empty<int>() : new[] { int.Parse(studyId) },
+                valueComparer: new ValueComparer<IEnumerable<int>>(
+                    equalsExpression: (x, y) => (x != null && y != null && x.SequenceEqual(y)) || x == y,
+                    hashCodeExpression: studyIds => studyIds.Aggregate(0, (hashCode, id) => HashCode.Combine(hashCode, id)),
+                    snapshotExpression: studyIds => studyIds.ToHashSet()));
 
             builder.Property(c => c.IsDeleted).HasColumnName("trashed").HasConversion<int>();
             builder.Property(c => c.Year).HasConversion<short>();
