@@ -28,7 +28,7 @@ namespace HR.AnsConnector.Infrastructure
         /// <summary>
         /// The rate at which the <see cref="RetryDelay"/> grows with each subsequent attempt.
         /// Default value is 1.0 (no growth).
-        /// Minimum value is 0.0.
+        /// Minimum value is 0.0 (no subsequent attempt).
         /// </summary>
         [Range(0.0, double.MaxValue, ErrorMessage = "The field {0} must be greater than or equal to {1}.")]
         public double BackOffRate { get; set; } = 1.0;
