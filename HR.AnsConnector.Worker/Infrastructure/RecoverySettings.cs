@@ -31,6 +31,6 @@ namespace HR.AnsConnector.Infrastructure
         /// Minimum value is 0.0.
         /// </summary>
         [Range(0.0, double.MaxValue, ErrorMessage = "The field {0} must be greater than or equal to {1}.")]
-        public double BackOffFactor { get; set; } = 1.0;
+        public double BackOffRate { get; set; } = 1.0;
     }
 }

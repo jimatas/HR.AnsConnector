@@ -16,7 +16,7 @@ namespace HR.AnsConnector.Tests
 
             Assert.AreEqual(4, recovery.RetryAttempts);
             Assert.AreEqual(new TimeSpan(hours: 0, minutes: 0, seconds: 15), recovery.RetryDelay);
-            Assert.AreEqual(1.0, recovery.BackOffFactor);
+            Assert.AreEqual(1.0, recovery.BackOffRate);
         }
 
         [TestMethod]
@@ -26,7 +26,7 @@ namespace HR.AnsConnector.Tests
             {
                 RetryAttempts = 5,
                 RetryDelay = TimeSpan.FromSeconds(5),
-                BackOffFactor = 1.2
+                BackOffRate = 1.2
             };
 
             var delay0 = recovery.CalculateRetryDelay(0);
@@ -41,7 +41,7 @@ namespace HR.AnsConnector.Tests
             {
                 RetryAttempts = 5,
                 RetryDelay = TimeSpan.FromSeconds(5),
-                BackOffFactor = 1.2
+                BackOffRate = 1.2
             };
 
             var delay4 = recovery.CalculateRetryDelay(4);
@@ -53,13 +53,13 @@ namespace HR.AnsConnector.Tests
         }
 
         [TestMethod]
-        public void CalculateRetryDelay_WithBackOffFactoryOfOne_ReturnsSameDelay()
+        public void CalculateRetryDelay_WithBackOffRateOfOne_ReturnsSameDelay()
         {
             var recovery = new RecoverySettings
             {
                 RetryAttempts = 5,
                 RetryDelay = TimeSpan.FromSeconds(5),
-                BackOffFactor = 1.0
+                BackOffRate = 1.0
             };
 
             var delay1 = recovery.CalculateRetryDelay(1);
@@ -75,13 +75,13 @@ namespace HR.AnsConnector.Tests
         }
 
         [TestMethod]
-        public void CalculateRetryDelay_WithBackOffFactoryOfGreaterThanOne_ReturnsGraduallyLongerDelays()
+        public void CalculateRetryDelay_WithBackOffRateOfGreaterThanOne_ReturnsGraduallyLongerDelays()
         {
             var recovery = new RecoverySettings
             {
                 RetryAttempts = 5,
                 RetryDelay = TimeSpan.FromSeconds(5),
-                BackOffFactor = 1.2
+                BackOffRate = 1.2
             };
 
             var delay1 = recovery.CalculateRetryDelay(1);
