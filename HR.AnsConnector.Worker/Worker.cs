@@ -49,7 +49,7 @@ namespace HR.AnsConnector
             }
             catch (Exception ex)
             {
-                logger.LogCritical(ex, "The BackgroundService failed.");
+                logger.LogCritical(ex, "The BackgroundService failed with the following error: {ExceptionMessage}", ex.Message);
 
                 Environment.Exit(ex.HResult);
             }
