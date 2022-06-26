@@ -2,6 +2,7 @@
 
 using System.Net;
 using System.Net.Http.Json;
+using System.Net.Mime;
 using System.Text.Json;
 
 namespace HR.AnsConnector.Infrastructure
@@ -24,24 +25,27 @@ namespace HR.AnsConnector.Infrastructure
                 StatusDescription = httpResponse.ReasonPhrase,
             };
 
-            if (httpResponse.IsSuccessStatusCode)
+            if (httpResponse.Content.Headers.ContentType?.MediaType == MediaTypeNames.Application.Json)
             {
-                apiResponse.Data = await httpResponse.Content.ReadFromJsonAsync<T>(jsonOptions, cancellationToken).WithoutCapturingContext();
-            }
-            else if (httpResponse.StatusCode == HttpStatusCode.UnprocessableEntity && httpResponse.RequestMessage?.Method != HttpMethod.Get)
-            {
-                var validationErrors = await httpResponse.Content.ReadFromJsonAsync<IDictionary<string, IEnumerable<object>>>(jsonOptions, cancellationToken).WithoutCapturingContext();
-                if (validationErrors is not null && validationErrors.Any())
+                if (httpResponse.IsSuccessStatusCode)
                 {
-                    apiResponse.ValidationErrors = validationErrors;
+                    apiResponse.Data = await httpResponse.Content.ReadFromJsonAsync<T>(jsonOptions, cancellationToken).WithoutCapturingContext();
                 }
-            }
-            else
-            {
-                var validationErrors = await httpResponse.Content.ReadFromJsonAsync<IDictionary<string, string>>(jsonOptions, cancellationToken).WithoutCapturingContext();
-                if (validationErrors is not null && validationErrors.Count == 1)
+                else if (httpResponse.StatusCode == HttpStatusCode.UnprocessableEntity && httpResponse.RequestMessage?.Method != HttpMethod.Get)
                 {
-                    apiResponse.ValidationErrors = new Dictionary<string, IEnumerable<object>> { { validationErrors.Single().Key, new[] { validationErrors.Single().Value } } };
+                    var validationErrors = await httpResponse.Content.ReadFromJsonAsync<IDictionary<string, IEnumerable<object>>>(jsonOptions, cancellationToken).WithoutCapturingContext();
+                    if (validationErrors is not null && validationErrors.Any())
+                    {
+                        apiResponse.ValidationErrors = validationErrors;
+                    }
+                }
+                else
+                {
+                    var validationErrors = await httpResponse.Content.ReadFromJsonAsync<IDictionary<string, string>>(jsonOptions, cancellationToken).WithoutCapturingContext();
+                    if (validationErrors is not null && validationErrors.Count == 1)
+                    {
+                        apiResponse.ValidationErrors = new Dictionary<string, IEnumerable<object>> { { validationErrors.Single().Key, new[] { validationErrors.Single().Value } } };
+                    }
                 }
             }
 
